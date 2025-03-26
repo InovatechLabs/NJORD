@@ -1,4 +1,4 @@
-{
+ /* {
   "compilerOptions": {
     "target": "es5",
     "lib": [
@@ -23,4 +23,20 @@
   "include": [
     "src"
   ]
+} 
+
+*/
+
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ES6",
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "rootDir": "server",
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "include": ["server/**/*.ts"]
 }
