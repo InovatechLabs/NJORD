@@ -12,7 +12,10 @@ dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3030',
+    credentials: true
+}));
 
 
 const PORT = 3000;
@@ -31,7 +34,6 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 
     // Rotas para autenticação do usuario
-    app.use("/api/user", userRouter);
     app.use("/api/user", userRouter);
 
     // Rota apenas para testes listando todos os usuarios do banco
@@ -52,5 +54,5 @@ const MONGODB_URL = process.env.MONGODB_URL;
   });
 
     app.listen(PORT, () => {
-        console.log(chalk.green(`Servidor rodando na porta ${PORT}`))
+        console.log(chalk.blue(`Servidor rodando na porta ${PORT}`))
     });
