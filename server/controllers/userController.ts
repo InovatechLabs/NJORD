@@ -56,9 +56,26 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         }
 
         const token = jwt.sign({ userId: usuarioExiste._id}, process.env.JWT_SECRET!, { expiresIn: '1h'});
+        res.cookie('auth_token', token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production', // HTTPS em produção
+          sameSite: 'lax',
+          maxAge: 3600000, // 1 hora
+        });
+        console.log(res)
         return res.status(200).json({ message: 'Login bem-sucedido', token });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Erro ao tentar fazer login.' });
   }
+}
+
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie('auth_token', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'lax',
+  });
+
+  res.status(200).json({ message: 'Logout bem-sucedido' })
 }

@@ -134,23 +134,23 @@ function SecondSection() {
 
             <CardsContainer>
                 <Card>
-                    <img src="https://i.imgur.com/QbigxR6.png" style={{ width: '100px', height: '100px' }}/>
+                    <img src="https://i.imgur.com/QbigxR6.png" style={{ width: '100px', height: '100px' }} alt=""/>
                     <CardTitle>Visualize parâmetros em gráficos</CardTitle>
                     <CardSubTitle>Explore os dados meteorológicos coletados pela estação em gráficos interativos.</CardSubTitle>
                 </Card>
                 <Card>
-                    <img src="https://i.imgur.com/OQ6WRig.png" style={{ width: '100px', height: '100px' }}/>
+                    <img src="https://i.imgur.com/OQ6WRig.png" style={{ width: '100px', height: '100px' }} alt=""/>
                     <CardTitle>Obtenha o histórico de dados coletados</CardTitle>
                     <CardSubTitle>Acesse o histórico completo dos dados coletados por cada estação meteorológica em uma tabela organizada.</CardSubTitle>
                 </Card>
                 <Card>
-                    <img src="https://i.imgur.com/85Lsiep.png" style={{ width: '100px', height: '100px' }}/>
+                    <img src="https://i.imgur.com/85Lsiep.png" style={{ width: '100px', height: '100px' }} alt=""/>
                     <CardTitle>Compare valores de estações distintas</CardTitle>
                     <CardSubTitle>Compare os dados de diferentes estações meteorológicas em gráficos, visualizando o mesmo parâmetro para facilitar a 
                     análise das variações entre as estações.</CardSubTitle>
                 </Card>
                 <Card>
-                    <img src="https://i.imgur.com/482C89z.png" style={{ width: '100px', height: '100px' }}/>
+                    <img src="https://i.imgur.com/482C89z.png" style={{ width: '100px', height: '100px' }} alt=""/>
                     <CardTitle>Download de dados</CardTitle>
                     <CardSubTitle>Baixe os dados coletados pelas estações meteorológicas em formato CSV para análise offline, permitindo 
                         fácil exportação e manipulação das informações.</CardSubTitle>
