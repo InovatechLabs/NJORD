@@ -1,90 +1,160 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
-import './styles/Nav.css';
-import { useAuth } from '../../contexts/AuthContext';
-import DropdownMenu  from '../dropdown/DropdownMenu';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import DropdownMenu from "../dropdown/DropdownMenu";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-const Li = styled.li`
-    margin-right: 70px;
-    font-size: 1.3rem;
-    font-weight: 500;
-    cursor: pointer;
-    color: black;
-    display: flex;
-    align-items: center;
-    position: relative; 
+const Nav = styled.nav`
+  background-color: #fff;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 25px;
+  margin: 0;
+
+  @media (max-width: 1200px) {
+    justify-content: end;
+  }
 `;
 
-function Nav() {
+const MenuButton = styled.button`
+  font-size: 30px;
+  color: black;
+  cursor: pointer;
+  display: none;
+  background-color: transparent;
+  border: none;
+  outline: none;
 
-    const navigate = useNavigate();
+  @media (max-width: 1100px) {
+    display: block;
+    order: 1;
+    z-index: 999;
+  }
+`;
 
-    const handleLoginClick = () => {
-        navigate('/auth');
-    }
+const NavList = styled.ul<{ open: boolean }>`
+  display: flex;
+  list-style: none;
+  margin: 0 auto;
+  gap: 20px;
+  z-index: 100;
+  flex-grow: 1;
+  justify-content: center;
+  
+  @media (max-width: 1100px) {
+    position: fixed;
+    top: 0;
+    right: ${({ open }) => (open ? "0" : "-100%")};
+    background-color: rgba(255, 255, 255);
+    width: 70%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+  }
+`;
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const { isAuthenticated } = useAuth();
+const NavItem = styled.li`
+  position: relative;
+  margin: 0 15px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  gap: 3px;
+  display: flex;
+  align-items: center;
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
+  &::after {
+    content: "";
+    height: 3px;
+    width: 0;
+    background: black;
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    transition: 0.45s;
+  }
 
-    return (
-        <>
-            <nav className='nav'>
-            <button onClick={toggleSidebar} className="checkbtn">
-          <FontAwesomeIcon icon={faBars} className="fas fa-bars" />
-        </button>
-                <img src='https://i.imgur.com/wpTjqAa.png' style={{ width: '180px', height: '170px', position: 'absolute', left: '0', marginLeft: '30px' }} alt='logo'/>
+  &:hover::after {
+    width: 100%;
+  }
 
-                <ul className={isSidebarOpen ? 'open' : ''}>
-                    <Li>
-                        <img 
-                            src='https://i.imgur.com/JQsOttz.png' 
-                            style={{ width: '30px', height: '30px', marginRight: '5px', verticalAlign: 'middle' }} 
-                            alt='logo'
-                        />
-                        Dashboard
-                    </Li>
-                    <Li>
-                        <img 
-                            src='https://static.thenounproject.com/png/141961-200.png' 
-                            style={{ width: '20px', height: '20px', marginRight: '5px', verticalAlign: 'middle' }} 
-                            alt='logo'
-                        />
-                        Comparação de dados
-                    </Li>
-                    <Li>
-                        <img 
-                            src='https://i.imgur.com/vQGgpwj.png' 
-                            style={{ width: '20px', height: '20px', marginRight: '5px', verticalAlign: 'middle' }} 
-                            alt='logo'
-                        />
-                        Sobre
-                    </Li>  
-                    {isAuthenticated ? (
-                        <div className="dropdown-container">
-                            <img src='https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png' style={{ width: '30px', height: '30px', margin: '0'}} alt=''/>
-                        <DropdownMenu />
-                    </div>
-                    ): 
-                    ( <Li  onClick={handleLoginClick}>
-                        <img 
-                            src='https://www.svgrepo.com/show/311063/person.svg' 
-                            style={{ width: '20px', height: '20px', marginRight: '5px', verticalAlign: 'middle' }} 
-                            alt='logo'
-                        />
-                        Login
-                    </Li>     
-                )}                
-                </ul>
-            </nav>
-        </>
-    );
-}
+  @media (max-width: 1060px) {
+    font-size: 1.2rem;
+  }
 
-export default Nav;
+  @media (max-width: 1100px) {
+    margin: 40px 0;
+    color: black;
+  }
+`;
+
+const DropdownContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Logo = styled.img`
+  width: 180px;
+  height: 170px;
+  position: absolute;
+  left: 0;
+  margin-left: 30px;
+  cursor: pointer;
+`;
+
+const NavBar: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
+
+  const handleHomeClick = () => {
+    navigate('/home');
+  }
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  return (
+    <Nav>
+      <MenuButton onClick={toggleSidebar}>
+        <FontAwesomeIcon icon={faBars} />
+      </MenuButton>
+      <Logo src="https://i.imgur.com/wpTjqAa.png" alt="logo"  onClick={handleHomeClick}/>
+      <NavList open={isSidebarOpen}>
+        <NavItem>
+          <img src="https://i.imgur.com/JQsOttz.png" width="30" height="30" alt="Dashboard" />
+          Dashboard
+        </NavItem>
+        <NavItem>
+          <img src="https://static.thenounproject.com/png/141961-200.png" width="20" height="20" alt="Comparação" />
+          Comparação de dados
+        </NavItem>
+        {isAuthenticated ? (
+          <DropdownContainer>
+            <img src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png" width="30" height="30" alt="Perfil" />
+            <DropdownMenu />
+          </DropdownContainer>
+        ) : (
+          <NavItem>
+            <img src="https://www.svgrepo.com/show/311063/person.svg" width="20" height="20" alt="Login" />
+            Login
+          </NavItem>
+        )}
+         <NavItem>
+          <img src="https://i.imgur.com/vQGgpwj.png" width="20" height="20" alt="Sobre" />
+          Sobre
+        </NavItem>
+      </NavList>
+    </Nav>
+  );
+};
+
+export default NavBar;

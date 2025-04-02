@@ -13,10 +13,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Verifica o token no cookie ao montar o componente
   useEffect(() => {
-    const token = document.cookie.split('; ').find(row => row.startsWith('auth_token='));
-    if (token) {
-      setIsAuthenticated(true);
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/user/verify", {
+          method: "GET",
+          credentials: "include",
+        });
+  
+        if (response.ok) {
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error("Erro ao verificar autenticação:", error);
+        setIsAuthenticated(false);
+      }
+    };
+  
+    checkAuth();
   }, []);
 
   // Altera o estado de autenticação e manipula o cookie
