@@ -1,7 +1,12 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export interface AuthenticatedRequest extends Request {
+  user?: { _id: string }; 
+
+}
+
+export const authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const token = req.cookies.auth_token;
   
   if (!token) {
@@ -9,8 +14,9 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    (req as any).user = decoded; 
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { _id: string };
+    console.log("Token decodificado:", decoded);
+    req.user = decoded; 
     next();
   } catch (err) {
     return res.status(401).json({ message: 'Token inválido ou expirado' });

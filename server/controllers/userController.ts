@@ -3,6 +3,8 @@ import User from '../models/user';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import { AuthenticatedRequest } from '../middlewares/verifyToken';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -55,7 +57,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
             return res.status(400).json({ message: 'Senha incorreta.' })
         }
 
-        const token = jwt.sign({ userId: usuarioExiste._id}, process.env.JWT_SECRET!, { expiresIn: '1h'});
+        const token = jwt.sign({ _id: usuarioExiste._id}, process.env.JWT_SECRET!, { expiresIn: '1h'});
         res.cookie('auth_token', token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production', // HTTPS em produção
@@ -79,3 +81,60 @@ export const logout = async (req: Request, res: Response) => {
 
   res.status(200).json({ message: 'Logout bem-sucedido' })
 }
+
+
+export const getUserInfo = async (req: AuthenticatedRequest, res: Response) => {
+  console.log("req.user recebido no controlador:", req.user);
+  try {
+
+    if (!req.user) {
+      return res.status(401).json({ message: 'Usuário não autenticado' });
+    }
+
+    const userId = new mongoose.Types.ObjectId(req.user._id); 
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+    console.log(user);
+
+    return res.json(user);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao atualizar usuário', error });
+  }
+};
+
+export const updateUserInfo = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user ? req.user._id : '');
+
+
+    if (!req.user) {
+      return res.status(401).json({ message: 'Usuário não autenticado' });
+    }
+
+    const { nome, email, senha } = req.body;
+
+   
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    const updateData: { nome?: string, email?: string, senha?: string } = {};
+
+    if (nome) updateData.nome = nome;
+    if (email) updateData.email = email;
+    if (senha) {
+      const hashedPassword = await bcrypt.hash(senha, 10);
+      updateData.senha = hashedPassword;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao atualizar usuário', error });
+  }
+};

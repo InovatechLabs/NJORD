@@ -5,6 +5,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
+import cookieParser from 'cookie-parser';
 import userRouter from './routes';
 import User from './models/user';
 
@@ -12,6 +13,7 @@ dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:3030',
     credentials: true

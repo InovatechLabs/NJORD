@@ -12,7 +12,6 @@
   .nav ul {
     display: flex;
     list-style: none;
-    padding: 0 20px;
     margin: 0 auto; 
     z-index: 100;
     flex-grow: 1;
@@ -51,14 +50,11 @@
     display: none;
   }
   
-  @media (max-width: 1300px) {
+  @media (max-width: 1200px) {
     .nav {
       justify-content: end;
     }
   
-    .nav ul {
-      margin-right: 5%;
-    }
   }
   
   @media (max-width: 1060px) {

@@ -16,6 +16,7 @@
     "axios": "^1.8.4",
     "bcryptjs": "^3.0.2",
     "concurrently": "^9.1.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "formik": "^2.4.6",
     "framer-motion": "^12.6.2",
@@ -58,6 +59,7 @@
     ]
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.9",
     "ts-node": "^10.9.2"

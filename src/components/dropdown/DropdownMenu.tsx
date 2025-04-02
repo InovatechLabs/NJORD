@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const DropdownContainer = styled.div`
   position: relative;
@@ -28,8 +29,8 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
   border-radius: 5px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
   width: 130px;
   opacity: ${(props) => (props.isOpen ? 1 : 0)};
   visibility: ${(props) => (props.isOpen ? "visible" : "hidden")};
@@ -40,6 +41,7 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
 
 const DropdownItem = styled.li`
   padding: 10px;
+  
   cursor: pointer;
   font-size: 14px;
   &:hover {
@@ -50,6 +52,11 @@ const DropdownItem = styled.li`
 const DropdownMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  }
 
   return (
     <DropdownContainer
@@ -58,8 +65,7 @@ const DropdownMenu: React.FC = () => {
     >
       <DropdownButton>Minha Conta</DropdownButton>
       <DropdownList isOpen={isOpen}>
-        <DropdownItem>Perfil</DropdownItem>
-        <DropdownItem>Configurações</DropdownItem>
+        <DropdownItem onClick={ handleSettingsClick }>Configurações</DropdownItem>
         <DropdownItem onClick={ logout }>Sair</DropdownItem>
       </DropdownList>
     </DropdownContainer>
