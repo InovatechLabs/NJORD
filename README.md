@@ -7,19 +7,24 @@
 
 <div align="center">
 <h1>
-<a href="#bookmark_tabs-entregas-de-sprints">Entrega das Sprints</a> | <a href="https://trello.com/b/YXR56u2f/abp">Trello</a> | <a href="#bust_in_silhouette-user-stories">User Story</a> | <a href="#triangular_flag_on_post-backlog-do-produto">Backlog do Produto</a> | <a href="#chart_with_downwards_trend-gráfico-burndown-das-sprints">Burndown</a> | <a href="#page_facing_up-wireframe">Wireframe</a> | <a href="#busts_in_silhouette-equipe">Equipe</a> | <a href="https://github.com/InovatechLabs/Ceres-Vita/blob/main/docs/Requisitos%20ABP%20DSM-2SEM.pdf">Requisitos</a>
+<a href="#bookmark_tabs-entregas-de-sprints">Entrega das Sprints</a> | <a href="https://trello.com/b/EtReA0xK/njord">Trello</a> | <a href="#bust_in_silhouette-user-stories">User Story</a> | <a href="#triangular_flag_on_post-backlog-do-produto">Backlog do Produto</a> | <a href="#chart_with_downwards_trend-gráfico-burndown-das-sprints">Burndown</a> | <a href="#page_facing_up-wireframe">Wireframe</a> | <a href="#busts_in_silhouette-equipe">Equipe</a> | <a href="https://github.com/InovatechLabs/Ceres-Vita/blob/main/docs/Requisitos%20ABP%20DSM-2SEM.pdf">Requisitos</a>
 </h1>
 </div>
 
 # :pencil: Sobre o Projeto
 
-Somos a Innovatech Labs, um grupo de desenvolvimento de software focado em criar soluções inovadoras. Este repositório apresenta o nosso mais recente projeto: uma plataforma que presta serviços de nutrição aos usuários, desenvolvida com tecnologias modernas da web. Nosso site para nutrição oferece uma experiência de resultados incríveis. A plataforma foi projetada para ser intuitiva e acessível, permitindo que os usuários sejam auxiliados e melhorem seus hábitos de alimentação, contribuindo assim para uma melhor qualidade de vida e bem-estar.
+Somos a NJORD, um grupo de desenvolvimento de software focado em criar soluções inovadoras. Este repositório apresenta o nosso mais recente projeto: consiste no desenvolvimento de uma plataforma web interativa para visualização, análise e disseminação de dados meteorológicos coletados por estações instaladas no Lago de Furnas, em Minas Gerais. A motivação principal é o registro frequente de eventos extremos de vento, que representam riscos significativos à navegação e segurança de embarcações.
 
-### 🏹 Objetivos do Projeto
-- **Melhorar a Qualidade de Vida:** Facilitar o acesso a informações nutricionais.
-- **Apoio ao Usuário:** Proporcionar ferramentas para gestão da alimentação.
+###  Objetivos do Projeto
+- Exibir os dados meteorológicos em tempo real e histórico, em formatos tabular e gráfico;
 
-### 💚 Status do Projeto: Concluído
+- Fornecer alertas visuais de risco para navegantes com base em critérios definidos (ex: velocidade do vento);
+
+- Permitir a comparação entre estações meteorológicas para auxiliar na análise e tomada de decisão;
+
+- Tornar os dados acessíveis à população dos 30 municípios ao redor do lago, promovendo impacto tecnológico, social e econômico.
+
+###  Status do Projeto: Concluído
 
 # :bookmark_tabs: Entregas de Sprints
 
@@ -94,7 +99,7 @@ Os entregáveis serão realizados conforme as datas previamente acordadas com o 
 ## :page_facing_up: Wireframe
 
 ![Wireframe Preview](./docs/Wireframe.png)  
-[Link para o Figma](https://www.figma.com/design/Ny1gtxP6uqtkRBuB9SEq3K/Untitled)
+[Link para o Figma](https://www.figma.com/design/wi7A4TR5ebwOnwLGZntkqZ/Njord?node-id=31-10&t=kYfnLCBDr5zQkejj-0)
 
 ## :busts_in_silhouette: Equipe
 
@@ -103,9 +108,9 @@ Os entregáveis serão realizados conforme as datas previamente acordadas com o 
 | Project Owner | Pedro Oliveira                     | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/PedroOlveira)      |
 | Scrum Master  | Paulo Alexandre                    | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/oneubp)            |
 | Dev Team      | Gabriel Juliani                    | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gjulianni)         |
-| Dev Team      | Kainé Sant'anna                    | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Usahime)           |
+| Dev Team      | Nicolas Oliveira                    | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NICOLAShsdo)           |
 | Dev Team      | Bruno Alves                        | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/bWS7)              |
-| Dev Team      | Victor Carbajo                     | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Victor-Carbajo)    |
+| Dev Team      | Marcos Paulo                     | [![Github](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/marcospaulo27)    |
 
 ## :page_facing_up: Instruções de Instalação
 
