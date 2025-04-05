@@ -100,9 +100,59 @@ const P = styled.p`
   cursor: pointer;
 `;
 
+const FloatingError = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ff4d4f;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 1.2rem;
+  z-index: 999;
+  animation: fadeIn 0.3s ease-in-out;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 4px;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    animation: shrink 4s linear forwards;
+    border-radius: 0 0 8px 8px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes shrink {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+`;
+
+
 const Auth: FC = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { setAuthenticated } = useAuth();
   const [isLogin, setisLogin] = useState(true);
 
@@ -141,10 +191,13 @@ const Auth: FC = () => {
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      setSuccess('Erro ao fazer login. Tente novamente.');
+      setErrorMessage("E-mail ou senha incorretos. Tente novamente.");
     } finally {
       setSubmitting(false);
     }
+    setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);    
   };
 
   const handleRegisterSubmit = async (
@@ -169,15 +222,16 @@ const Auth: FC = () => {
   // Formik configurado para tratar login e cadastro dinamicamente
   return (
     <Container>
-      <Card>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img
-            src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
-            style={{ width: '100px', height: '100px' }}
-            alt=""
-          />
-          {isLogin ? <CardTitle>Login</CardTitle> : <CardTitle>Cadastro</CardTitle>}
-        </div>
+<Card>
+  {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
+  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <img
+      src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
+      style={{ width: '100px', height: '100px' }}
+      alt=""
+    />
+    {isLogin ? <CardTitle>Login</CardTitle> : <CardTitle>Cadastro</CardTitle>}
+  </div>
 
         <Formik
           initialValues={isLogin ? { email: "", senha: "" } : { nome: "", email: "", senha: "" }} // Adiciona nome se for cadastro
