@@ -6,8 +6,9 @@ import { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
-import userRouter from './routes';
+import userRouter from './routes/userRoutes';
 import User from './models/user';
+import recoverRouter from './routes/recoverPasswordRouter';
 
 dotenv.config();
 
@@ -35,8 +36,9 @@ const MONGODB_URL = process.env.MONGODB_URL;
 
 
 
-    // Rotas para autenticação do usuario
-    app.use("/api/user", userRouter);
+    
+    app.use("/api/user", userRouter); // Rota para autenticação do usuario   
+    app.use("/api/recover", recoverRouter); // Rota para recuperar senha
 
     // Rota apenas para testes listando todos os usuarios do banco
     app.get('/listar', async (req:Request, res:Response) => {

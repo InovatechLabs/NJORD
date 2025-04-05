@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import Settings from './pages/Settings';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AuthenticatedRoute from './components/auth/AuthenticatedRoute';
+import RecoverPassword from './pages/RecoverPassword';
 
 function App() {
     return (
@@ -25,6 +26,8 @@ function App() {
                 <Settings />
             </ProtectedRoute> 
             } 
+            />
+            <Route path='/recover/:token' element={<RecoverPassword />} 
             />
             <Route path='*' element={<Home />} 
             />

@@ -38,6 +38,7 @@ export const register = async (req: Request, res: Response) => {
   }
 }
 
+
 export const login = async (req: Request, res: Response): Promise<Response> => {
     
     const { email, senha } = req.body;
@@ -72,6 +73,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 }
 
+
 export const logout = async (req: Request, res: Response) => {
   res.clearCookie('auth_token', {
     httpOnly: true,
@@ -104,6 +106,7 @@ export const getUserInfo = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(500).json({ message: 'Erro ao atualizar usuário', error });
   }
 };
+
 
 export const updateUserInfo = async (req: AuthenticatedRequest, res: Response) => {
   try {

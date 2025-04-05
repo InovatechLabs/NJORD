@@ -117,6 +117,9 @@ const NavBar: React.FC = () => {
   const handleHomeClick = () => {
     navigate('/home');
   }
+  const handleLoginClick = () => {
+    navigate('/auth');
+  }
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -143,7 +146,7 @@ const NavBar: React.FC = () => {
             <DropdownMenu />
           </DropdownContainer>
         ) : (
-          <NavItem>
+          <NavItem onClick={handleLoginClick}>
             <img src="https://www.svgrepo.com/show/311063/person.svg" width="20" height="20" alt="Login" />
             Login
           </NavItem>

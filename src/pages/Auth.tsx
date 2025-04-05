@@ -3,9 +3,9 @@ import { Form, Button } from "react-bootstrap";
 import { Formik, Field, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { loginUser, registerUser } from "../services/auth";
+import { loginUser, registerUser, RecoverPassword } from "../services/auth";
 import { useAuth } from "../contexts/AuthContext";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 interface FormValues {
   email: string;
@@ -16,6 +16,10 @@ interface RegisterValues {
   nome: string;
   email: string;
   senha: string;
+}
+
+interface RecoverValue {
+  email: string;
 }
 
 const Container = styled.div`
@@ -148,6 +152,122 @@ const FloatingError = styled.div`
   }
 `;
 
+const FloatingSuccess = styled.div`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #05aa57;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 1.2rem;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  &::after {
+    content: "";
+    display: block;
+    height: 4px;
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    animation: shrink 4s linear forwards;
+    border-radius: 0 0 8px 8px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes shrink {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+`;
+
+export const ModalContent = styled.div`
+  background-color: #273D67;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 800px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  max-height: 80vh;
+  color: white;
+  position: relative;
+  animation: ${slideIn} 0.45s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+export const CloseModalButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  color: white;
+  font-size: 1.5rem;
+  border: none;
+  cursor: pointer;
+`;
+
+const BtnSend = styled.button`
+  background-color: green;
+  padding: 10px 15px;
+  height: 50px;
+  width: 70%;
+  color: #fff;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+`;
 
 const Auth: FC = () => {
   const navigate = useNavigate();
@@ -155,6 +275,7 @@ const Auth: FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { setAuthenticated } = useAuth();
   const [isLogin, setisLogin] = useState(true);
+  const [modal, setModal] = useState(false);
 
   const handleRegisterClick = () => {
     setisLogin(false);
@@ -163,6 +284,12 @@ const Auth: FC = () => {
   const handleLoginClick = () => {
     setisLogin(true);
   };
+
+  const toggleModal = () => {
+    setModal((prev) => !prev);
+  }
+
+  // Schemas de validações do input do usuário
 
   const validationSchema = Yup.object().shape({
     email: Yup.string().required("Por favor, insira seu e-mail"),
@@ -174,6 +301,8 @@ const Auth: FC = () => {
     email: Yup.string().required("Por favor, insira seu e-mail"),
     senha: Yup.string().required("Por favor, insira sua senha"),
   });
+
+  // A funçao handleSubmit envia os dados de login para o backend
 
   const handleSubmit = async (
     values: FormValues,
@@ -200,6 +329,8 @@ const Auth: FC = () => {
     }, 4000);    
   };
 
+  // A funçao handleRegisterSubmit é para enviar os dados de cadastro
+
   const handleRegisterSubmit = async (
     values: RegisterValues,
     { setSubmitting }: FormikHelpers<RegisterValues>
@@ -213,10 +344,29 @@ const Auth: FC = () => {
       }
     } catch (error) {
       console.error('Erro ao fazer cadastro:', error);
-      setSuccess('Erro ao fazer cadastro. Tente novamente.');
+      setErrorMessage("E-mail já cadastrado.")
     } finally {
       setSubmitting(false);
-    }
+    } setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
+  };
+
+  const handleRecoverEmail = async (
+    values: RecoverValue,
+    { setSubmitting }: FormikHelpers<RecoverValue>
+  ) => {
+    try {
+      const submit = await RecoverPassword(values);
+      console.log(submit.message);
+      setSuccess(submit.message);
+    } catch (error) {
+      console.error('Erro ao enviar e-mail para recuperaão:', error);
+    } finally {
+      setSubmitting(false);
+    } setTimeout(() => {
+      setSuccess("");
+    }, 4000);
   };
 
   // Formik configurado para tratar login e cadastro dinamicamente
@@ -224,6 +374,7 @@ const Auth: FC = () => {
     <Container>
 <Card>
   {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
+  {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0'}}/>{success}</FloatingSuccess>}
   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
     <img
       src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
@@ -256,7 +407,7 @@ const Auth: FC = () => {
                 <Label htmlFor="senha">Senha</Label>
                 <InputField type="password" name="senha" placeholder="Preencha sua senha" />
               </Form.Group>
-
+              
               {isLogin ? (
                 <p
                   style={{
@@ -267,7 +418,7 @@ const Auth: FC = () => {
                     fontWeight: '200',
                     cursor: 'pointer',
                   }}
-                  onClick={handleLoginClick}
+                  onClick={toggleModal}
                 >
                   Esqueci minha senha
                 </p>
@@ -286,7 +437,6 @@ const Auth: FC = () => {
                   Já possui uma conta? Faça login!
                 </p>
               )}
-
               <BtnRegister variant="primary" type="submit">
                 {isLogin ? "Entrar" : "Cadastrar"}
               </BtnRegister>
@@ -300,6 +450,32 @@ const Auth: FC = () => {
             </StyledForm>
           )}
         </Formik>
+
+        {/* Modal para a funcionalidade de recuperar senha, abre um menu para o usuario inserir seu e-mail e prosseguir com a recuperação */}
+        {modal && (
+                <ModalOverlay onClick={toggleModal}>
+                  <ModalContent onClick={(e) => e.stopPropagation()}>
+                    <CloseModalButton onClick={toggleModal}>×</CloseModalButton>
+                    <h1>Por favor, insira o e-mail da sua conta:</h1>
+                    <Formik
+                      initialValues={{ email: '' }}
+                      onSubmit={handleRecoverEmail}
+                    >
+                      {({ handleSubmit }: FormikProps<RecoverValue>) => (
+                        <Form onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="email">
+                          <InputField name="email" type="email" placeholder="Digite seu e-mail" />
+                          <BtnSend type="submit">
+                            Enviar
+                          </BtnSend>
+                        </Form.Group>
+                        </Form>
+                      )}
+                    </Formik>
+                  </ModalContent>
+                </ModalOverlay>
+                )}
+
       </Card>
     </Container>
   );
