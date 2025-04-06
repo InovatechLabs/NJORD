@@ -7,6 +7,7 @@ import Settings from './pages/Settings';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AuthenticatedRoute from './components/auth/AuthenticatedRoute';
 import RecoverPassword from './pages/RecoverPassword';
+import CsvManagerPage from './pages/CsvManager';
 
 function App() {
     return (
@@ -31,6 +32,7 @@ function App() {
             />
             <Route path='*' element={<Home />} 
             />
+            <Route path='/csv' element={<CsvManagerPage />} />
         </Routes>
     </Router>
     </AuthProvider>

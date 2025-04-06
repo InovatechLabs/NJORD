@@ -1,62 +1,73 @@
-import mongoose, {Collection} from 'mongoose';
+import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import express from 'express';
-import { Request, Response } from 'express';
-import dotenv from 'dotenv';
+import express, { Request, Response } from 'express';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
+
+// Rotas
 import userRouter from './routes/userRoutes';
-import User from './models/user';
 import recoverRouter from './routes/recoverPasswordRouter';
+import csvRouter from './routes/csvRoutes';
+
+// Modelos
+import User from './models/user';
 
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json());
-app.use(cookieParser());
+
+// ===================== MIDDLEWARES =====================
 app.use(cors({
-    origin: 'http://localhost:3030',
-    credentials: true
+  origin: 'http://localhost:3030', // Frontend
+  credentials: true
 }));
 
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(cookieParser());
 
+// ===================== ROTAS =====================
+app.use("/api/user", userRouter);         // Autenticação
+app.use("/api/recover", recoverRouter);   // Recuperação de senha
+app.use("/api/csv", csvRouter);           // Upload de CSV
+
+// Rota de teste - listar usuários
+app.get('/listar', async (req: Request, res: Response) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    console.error(chalk.red("Erro ao listar usuários:", error));
+    res.status(500).json({ message: "Erro ao listar usuários", error });
+  }
+});
+
+// Rota para não encontradas
+app.use((req: Request, res: Response): Response => {
+  return res.status(404).json({
+    message: "Rota não encontrada",
+  });
+});
+
+// ===================== CONEXÃO COM BANCO =====================
 const PORT = 3000;
 const MONGODB_URL = process.env.MONGODB_URL;
 
-    // Verifica se a variável da url de conexão com o mongo está disponível, em caso negativo o código apresenta erro
-    if(!MONGODB_URL) {
-    throw new Error('A variável de ambiente MONGODB_URL não está definida.')
-    }
+if (!MONGODB_URL) {
+  throw new Error('A variável de ambiente MONGODB_URL não está definida.');
+}
 
-    // Faz a conexão com o banco de dados da Njord
-    mongoose.connect(MONGODB_URL).then(() => 
-    console.log(chalk.green('MongoDB conectado com sucesso'))
-).catch((err) => console.log(chalk.red('Erro ao tentar se conectar com o MongoDB:', err)));
+mongoose.connect(MONGODB_URL)
+  .then(() => {
+    console.log(chalk.green('✅ MongoDB conectado com sucesso'));
 
-
-
-    
-    app.use("/api/user", userRouter); // Rota para autenticação do usuario   
-    app.use("/api/recover", recoverRouter); // Rota para recuperar senha
-
-    // Rota apenas para testes listando todos os usuarios do banco
-    app.get('/listar', async (req:Request, res:Response) => {
-      try {
-          const Users = await User.find();
-          res.json(Users);
-      } catch (error) {
-          res.status(500).json({message: "Erro ao listar usuarios:", error });
-      }
-  });
-
-    // Rota para caso seja acessada uma rota inexistente
-    app.use((req: Request, res: Response): Response => {
-    return res.status(404).json({
-      message: "Rota não encontrada",
-    });
-  });
-
+    // Só inicia o servidor se o Mongo estiver conectado
     app.listen(PORT, () => {
-        console.log(chalk.blue(`Servidor rodando na porta ${PORT}`))
+      console.log(chalk.blue(`🚀 Servidor rodando na porta ${PORT}`));
     });
+  })
+  .catch((err) => {
+    console.error(chalk.red('❌ Erro ao conectar com o MongoDB:', err));
+  });
