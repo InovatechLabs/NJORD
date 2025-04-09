@@ -6,7 +6,7 @@ import DropdownMenu from "../dropdown/DropdownMenu";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const Nav = styled.nav`
+const NavContainer = styled.nav`
   background-color: #fff;
   color: black;
   display: flex;
@@ -94,6 +94,11 @@ const NavItem = styled.li`
   }
 `;
 
+
+type NavProps = {
+  onAboutClick?: () => void;
+};
+
 const DropdownContainer = styled.div`
   display: flex;
   align-items: center;
@@ -109,7 +114,9 @@ const Logo = styled.img`
   cursor: pointer;
 `;
 
-const NavBar: React.FC = () => {
+function NavBar({ onAboutClick }: NavProps) {
+
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -126,7 +133,7 @@ const NavBar: React.FC = () => {
   };
 
   return (
-    <Nav>
+    <NavContainer>
       <MenuButton onClick={toggleSidebar}>
         <FontAwesomeIcon icon={faBars} />
       </MenuButton>
@@ -151,12 +158,12 @@ const NavBar: React.FC = () => {
             Login
           </NavItem>
         )}
-         <NavItem>
+         <NavItem onClick={onAboutClick}>
           <img src="https://i.imgur.com/vQGgpwj.png" width="20" height="20" alt="Sobre" />
           Sobre
         </NavItem>
       </NavList>
-    </Nav>
+    </NavContainer>
   );
 };
 

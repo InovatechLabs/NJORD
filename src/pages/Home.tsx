@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Nav from "../components/nav/Nav";
 import FirstSection from '../components/home/firstSection/FirstSection';
 import SecondSection from '../components/home/secondSection/SecondSection';
@@ -7,12 +7,18 @@ import Footer from "../components/home/footer/Footer";
 
 export default function Home() {
 
+    const thirdSectionRef = useRef<HTMLDivElement>(null);
+
+    const scrollToThirdSection = () => {
+        thirdSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <>
-        <Nav />
+        <Nav onAboutClick={scrollToThirdSection}/>
         <FirstSection />
         <SecondSection />
-        <ThirdSection />
+        <ThirdSection ref={thirdSectionRef}/>
         <Footer />
         </>
     )

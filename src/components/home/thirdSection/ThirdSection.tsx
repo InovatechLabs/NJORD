@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import styled from "styled-components";
 import image from '../../../images/path.png';
 import svg from '../../../images/image 12.png';
@@ -178,9 +178,9 @@ const OrbitContainer = styled(motion.div)`
 `;
 
 
-function ThirdSection() {
+const ThirdSection = forwardRef<HTMLDivElement>((props, ref) => {
     return (
-        <>
+      <div ref={ref}>
             <Image src={image} alt="Onda decorativa" />
             <Container>
             <SvgSection>
@@ -220,8 +220,8 @@ function ThirdSection() {
     
             </Container>
 
-        </>
+        </div>
     )
-};
+});
 
 export default ThirdSection;
