@@ -3,13 +3,24 @@ import CsvData from '../models/csvData';
 
 export const uploadCsvData = async (req: Request, res: Response) => {
   try {
-    const data = req.body;
+    let data = req.body;
 
     if (!Array.isArray(data)) {
       return res.status(400).json({ message: "Dados enviados não são um array." });
     }
 
-    await CsvData.insertMany(data); // grava tudo de uma vez
+    // Converte o campo Date para formato ISO string
+    data = data.map((item: any) => {
+      const dateStr = item.Date;
+      if (typeof dateStr === "string" && /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) {
+        const [month, day, year] = dateStr.split("/").map(Number);
+        const iso = new Date(year, month - 1, day).toISOString().split("T")[0]; // YYYY-MM-DD
+        return { ...item, Date: iso };
+      }
+      return item;
+    });
+
+    await CsvData.insertMany(data);
     return res.status(200).json({ message: "Dados salvos com sucesso." });
   } catch (error) {
     return res.status(500).json({ message: "Erro ao salvar dados", error });
@@ -28,7 +39,7 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
 
   try {
     const data = await CsvData.find({
-      Date: { $gte: startDate.toISOString().slice(0, 10), $lte: endDate.toISOString().slice(0, 10) }
+      Date: { $gte: start, $lte: end }
     }).lean();
 
     // Se for por dia, agrupar e calcular médias
