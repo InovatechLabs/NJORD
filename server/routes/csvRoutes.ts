@@ -1,8 +1,9 @@
 import express from 'express';
-import { uploadCsvData } from '../controllers/csvController';
+import { getCsvForDashboard, uploadCsvData } from '../controllers/csvController';
 
 const router = express.Router();
 
 router.post('/upload', uploadCsvData); 
+router.get("/dashboard", getCsvForDashboard);
 
 export default router;
