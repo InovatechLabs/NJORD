@@ -124,6 +124,9 @@ function NavBar({ onAboutClick }: NavProps) {
   const handleHomeClick = () => {
     navigate('/home');
   }
+  const handleDashboardClick = () => {
+    navigate('/dashboard');
+  }
   const handleLoginClick = () => {
     navigate('/auth');
   }
@@ -139,7 +142,7 @@ function NavBar({ onAboutClick }: NavProps) {
       </MenuButton>
       <Logo src="https://i.imgur.com/wpTjqAa.png" alt="logo"  onClick={handleHomeClick}/>
       <NavList open={isSidebarOpen}>
-        <NavItem>
+        <NavItem onClick={handleDashboardClick}>
           <img src="https://i.imgur.com/JQsOttz.png" width="30" height="30" alt="Dashboard" />
           Dashboard
         </NavItem>

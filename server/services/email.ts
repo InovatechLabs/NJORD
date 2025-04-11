@@ -19,7 +19,7 @@ export const sendRecoveryEmail = async (email: string, token: string) => {
       htmlContent: `
         <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto;">
           <div style="text-align: center;">
-            <img src="https://imgur.com/wpTjqAa" alt="Njord" style="max-width: 150px; margin-bottom: 20px;" />
+            <img src="https://i.imgur.com/wpTjqAa.png" alt="Njord" style="max-width: 150px; margin-bottom: 20px;" />
           </div>
           <h2 style="text-align: center; color: #333;">Recuperação de Senha</h2>
           <p>Olá, você solicitou a recuperação de senha da sua conta.</p>
