@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Nav from '../components/nav/Nav';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import {
@@ -74,9 +75,11 @@ export default function Dashboard() {
   };
 
   return (
+    <>
+    <Nav />
     <div style={{ padding: 20 }}>
       <h1>Dashboard Meteorológico - Njord</h1>
-      <button onClick={fetchData}>Enviar dados</button>
+      <button onClick={fetchData}>Gerar gráfico</button>
       <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
         <div>
           <label>Data Início:</label>
@@ -144,5 +147,6 @@ export default function Dashboard() {
         </ResponsiveContainer>
       </div>
     </div>
+    </>
   );
 }

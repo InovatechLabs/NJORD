@@ -6,6 +6,8 @@ interface IUser extends Document {
     email: string;
     senha: string;
     compararSenhas(senha: string): boolean;
+    resetToken?: string;
+    resetTokenExpires?: Date;
   }
 
   const UserSchema: Schema = new Schema(
@@ -23,6 +25,14 @@ interface IUser extends Document {
       senha: { 
         type: String, 
         required: true 
+      },
+      resetToken: {
+        type: String,
+        required: false,
+      },
+      resetTokenExpires: {
+        type: String,
+        required: false,
       },
     },
     { timestamps: true }

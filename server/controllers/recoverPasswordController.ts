@@ -21,6 +21,11 @@ export const createRecoverToken = async (req: Request, res: Response) => {
       }
 
       const token = jwt.sign({email: emailExiste.email}, process.env.JWT_SECRET!, {expiresIn: '15m'});
+
+      emailExiste.resetToken = token;
+      emailExiste.resetTokenExpires = new Date(Date.now() + 15 * 60 * 1000);
+      await emailExiste.save();
+
       await sendRecoveryEmail(email, token);
       return res.status(200).json({ message: 'Se o e-mail existir, você receberá um link para recuperação.'})
     } catch (err) {
@@ -52,7 +57,13 @@ export const createRecoverToken = async (req: Request, res: Response) => {
         return res.status(404).json({ message: "Usuário não encontrado." });
       }
 
+      if(!user.resetTokenExpires || user.resetTokenExpires < new Date()) {
+        return res.status(400).json({ message: 'Token expirado.' });
+      }
+
       user.senha = newPassword;
+      user.resetToken = undefined;
+      user.resetTokenExpires = undefined;
       await user.save();
   
       res.json({ message: "Senha atualizada com sucesso." });
