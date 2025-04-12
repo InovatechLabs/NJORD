@@ -1,0 +1,111 @@
+Modelagem de Dados para o Sistema de Monitoramento Meteorológico no MongoDB
+Com base nos requisitos funcionais (RF) fornecidos, podemos modelar os dados e seus relacionamentos utilizando o MongoDB. A natureza flexível do MongoDB nos permite incorporar alguns dados relacionados dentro de um mesmo documento, otimizando a leitura para certos casos de uso.
+
+Principais Coleções:
+
+users: Para armazenar informações dos usuários autenticados.
+stations: Para armazenar informações sobre as estações meteorológicas.
+weather_data: Para armazenar os dados meteorológicos coletados pelas estações.
+Detalhes de Cada Coleção:
+
+1. users Collection:
+
+{
+  "_id": ObjectId(),
+  "name": String,
+  "email": String,
+  "password": String, // Hash da senha por segurança
+  "created_at": Date,
+  "updated_at": Date
+}
+
+_id: Identificador único do usuário (gerado automaticamente pelo MongoDB).
+name: Nome completo do usuário.
+email: Endereço de e-mail do usuário (deve ser único para login).
+password: Hash seguro da senha do usuário.
+created_at: Timestamp da criação do usuário.
+updated_at: Timestamp da última atualização do usuário.
+
+2. stations Collection:
+
+{
+  "_id": ObjectId(),
+  "name": String, // Nome da estação (ex: "Estação Central", "Estação Norte")
+  "location": {
+    "latitude": Number,
+    "longitude": Number
+  },
+  "description": String, // Descrição opcional da estação
+  "created_at": Date,
+  "updated_at": Date
+}
+_id: Identificador único da estação meteorológica.
+name: Nome da estação para fácil identificação.
+location: Documento embutido contendo a latitude e longitude da estação.
+description: Descrição textual da estação (opcional).
+created_at: Timestamp da criação da estação.
+updated_at: Timestamp da última atualização da estação.
+
+3. weather_data Collection:
+
+{
+  "_id": ObjectId(),
+  "station_id": ObjectId(), // Referência à coleção 'stations'
+  "timestamp": Date,
+  "Temp_C": Number,
+  "Hum_%": Number,
+  "Press_Bar": Number,
+  "TempCabine_C": Number,
+  "Charge": Number,
+  "SR_Wm2": Number,
+  "WindPeak_ms": Number,
+  "WindSpeed_Inst": Number,
+  "WindSpeed_Avg": Number,
+  "WindDir_Inst": Number,
+  "WindDir_Avg": Number
+}
+
+_id: Identificador único da leitura meteorológica.
+station_id: Referência à coleção stations, indicando qual estação coletou esses dados. Usaremos o ObjectId da estação correspondente.
+timestamp: Data e hora da coleta dos dados.
+Temp_C: Temperatura em Celsius.
+Hum_%: Umidade em porcentagem.
+Press_Bar: Pressão atmosférica em Bar.
+TempCabine_C: Temperatura da cabine em Celsius.
+Charge: Carga (unidade não especificada, assumindo ser numérica).
+SR_Wm2: Radiação solar em Watts por metro quadrado.
+WindPeak_ms: Pico do vento em metros por segundo.
+WindSpeed_Inst: Velocidade instantânea do vento em metros por segundo.
+WindSpeed_Avg: Velocidade média do vento em metros por segundo.
+WindDir_Inst: Direção instantânea do vento em graus (0-360).
+WindDir_Avg: Direção média do vento em graus (0-360).
+
+Relacionamentos entre as Tabelas:
+
+users: Não possui um relacionamento direto de chave estrangeira com as outras coleções nos requisitos fornecidos. A autenticação via JWT (RF01.3 e RF01.4) geralmente envolve a geração de um token após o login bem-sucedido, e esse token é usado para verificar a identidade do usuário em requisições subsequentes. Não há uma necessidade explícita de referenciar os dados meteorológicos ou estações diretamente ao usuário na modelagem.
+stations e weather_data: Existe um relacionamento um-para-muitos entre stations e weather_data. Uma estação (stations) pode ter múltiplas leituras de dados meteorológicos (weather_data). Este relacionamento é estabelecido através do campo station_id na coleção weather_data, que armazena o _id da estação correspondente.
+
+Justificativa da Modelagem:
+
+Separação de Usuários e Dados: Mantemos as informações de usuários separadas dos dados meteorológicos e das informações das estações por questões de segurança e organização.
+Incorporação de Localização da Estação: A localização da estação (latitude e longitude) é incorporada diretamente no documento da estação, pois é uma informação intrínseca e raramente consultada separadamente. Isso otimiza a leitura das informações da estação.
+Referência para Dados Meteorológicos: Utilizamos uma referência (station_id) na coleção weather_data para vincular cada leitura à estação que a gerou. Isso permite:
+Consultar todos os dados de uma estação específica facilmente.
+Manter as informações da estação centralizadas e evitar redundância.
+Facilitar atualizações nas informações da estação.
+Estrutura Direta para Dados Meteorológicos: A estrutura da coleção weather_data reflete diretamente os campos de dados solicitados no requisito RF02.1, facilitando a inserção e a consulta desses dados.
+Índices (Considerações para Otimização):
+
+Para otimizar as consultas e funcionalidades, é importante considerar a criação de índices nas seguintes colunas:
+
+users:
+email (único): Para buscas rápidas de usuários por e-mail durante o login e para garantir a unicidade.
+stations:
+name: Para buscas de estações por nome.
+weather_data:
+station_id: Para filtrar dados por estação (RF02.2, RF03, RF04, RF05.2).
+timestamp: Para filtrar dados por período (RF02.2, RF03.6, RF04.4, RF05.2) e para ordenação cronológica.
+station_id, timestamp (índice composto): Para consultas que filtram por estação e período de tempo.
+Temp_C, Hum_%, Press_Bar, WindSpeed_Inst, WindDir_Inst (índices individuais): Para otimizar as buscas e ordenações por esses parâmetros (RF02.3).
+
+observação : Esta modelagem de dados no MongoDB utiliza três coleções principais (users, stations, weather_data) e estabelece um relacionamento um-para-muitos entre stations e weather_data através de referências. A estrutura dos documentos em weather_data espelha os requisitos de dados, e a consideração de índices é crucial para garantir o desempenho eficiente do sistema. Essa estrutura permitirá implementar as funcionalidades de autenticação, visualização de histórico, gráficos, comparação de estações e download de dados conforme os requisitos fornecidos.
