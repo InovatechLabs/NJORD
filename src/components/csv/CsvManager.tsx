@@ -3,6 +3,7 @@ import Papa from "papaparse";
 import axios from "axios";
 import styled from 'styled-components';
 
+
 interface CsvRow {
   [key: string]: string | number;
 }
@@ -19,6 +20,7 @@ export default function CsvManager() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      // @ts-ignore
       complete: function (results) {
         const parsedData = results.data as CsvRow[];
         setCsvData(parsedData);

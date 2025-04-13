@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import styled from 'styled-components';
 import { Form, Button } from "react-bootstrap";
-import { FaBolt } from 'react-icons/fa';
 
 const Container = styled.div`
   display: flex;
@@ -188,7 +187,6 @@ const RecoverPassword = () => {
         {error && <Message>{error}</Message>}
 
         <HomeButton onClick={() => navigate('/')}>
-          <FaBolt />
           Página Inicial
         </HomeButton>
       </Card>

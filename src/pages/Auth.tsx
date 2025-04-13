@@ -80,7 +80,7 @@ const Label = styled.label`
   font-weight: 600;
 `;
 
-const BtnRegister = styled(Button)`
+const BtnRegister = styled(Button)<{ children?: React.ReactNode }>`
   width: 100%;
   background-color: #0D1B2A;
   height: 70px;
@@ -269,6 +269,8 @@ const BtnSend = styled.button`
   cursor: pointer;
 `;
 
+
+
 const Auth: FC = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = useState("");
@@ -369,6 +371,8 @@ const Auth: FC = () => {
     }, 4000);
   };
 
+  const buttonText = isLogin ? "Entrar" : "Cadastrar";
+
   // Formik configurado para tratar login e cadastro dinamicamente
   return (
     <Container>
@@ -437,8 +441,9 @@ const Auth: FC = () => {
                   Já possui uma conta? Faça login!
                 </p>
               )}
+              
               <BtnRegister variant="primary" type="submit">
-                {isLogin ? "Entrar" : "Cadastrar"}
+                {buttonText}
               </BtnRegister>
 
             

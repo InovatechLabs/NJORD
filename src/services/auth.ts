@@ -40,9 +40,8 @@ export const registerUser = async (user: User): Promise<ApiResponse> => {
     { withCredentials: true }
     );
     return response.data;
-  } catch (error) {
-    
-    throw new Error("Failed to register user", error);
+  } catch (error) {   
+    throw new Error(`Failed to register user: ${error}`);
   }
 };
 

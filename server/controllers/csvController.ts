@@ -37,9 +37,12 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
   const startDate = new Date(start as string);
   const endDate = new Date(end as string);
 
+  const startStr = startDate.toISOString().slice(0, 10);
+  const endStr = endDate.toISOString().slice(0, 10);
+  
   try {
     const data = await CsvData.find({
-      Date: { $gte: start, $lte: end }
+      Date: { $gte: startStr, $lte: endStr }
     }).lean();
 
     // Se for por dia, agrupar e calcular médias
@@ -50,7 +53,7 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
         if (!agrupado[item.Date]) agrupado[item.Date] = [];
         agrupado[item.Date].push(item);
       });
-
+      
       const agregados = Object.entries(agrupado).map(([data, registros]: any) => {
         const soma = (campo: string) =>
           registros.reduce((acc: number, curr: any) => acc + parseFloat(curr[campo] || 0), 0);

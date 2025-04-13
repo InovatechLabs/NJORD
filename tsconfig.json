@@ -34,9 +34,10 @@
     "target": "ES6",
     "esModuleInterop": true,
     "outDir": "dist",
-    "rootDir": "server",
+    "rootDir": ".",
+    "jsx": "react",
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["server/**/*.ts"]
+  "include": ["server/**/*.ts"] 
 }
