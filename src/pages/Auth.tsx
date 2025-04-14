@@ -80,7 +80,7 @@ const Label = styled.label`
   font-weight: 600;
 `;
 
-const BtnRegister = styled(Button)<{ children?: React.ReactNode }>`
+const BtnRegister = styled(Button) <{ children?: React.ReactNode }>`
   width: 100%;
   background-color: #0D1B2A;
   height: 70px;
@@ -149,6 +149,32 @@ const FloatingError = styled.div`
     to {
       width: 0%;
     }
+  }
+`;
+
+const HomeButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 30px;
+  align-self: center;
+
+  &:hover {
+    background-color: #fff;
+    color: #0D1B2A;
+  }
+
+  svg {
+    font-size: 1.5rem;
   }
 `;
 
@@ -282,7 +308,7 @@ const Auth: FC = () => {
   const handleRegisterClick = () => {
     setisLogin(false);
   };
-  
+
   const handleLoginClick = () => {
     setisLogin(true);
   };
@@ -316,8 +342,8 @@ const Auth: FC = () => {
       setSuccess(submit.message);
       if (submit.message === 'Login bem-sucedido') {
         if (submit.token) {
-          setAuthenticated(true); 
-          navigate('/home'); 
+          setAuthenticated(true);
+          navigate('/home');
         }
       }
     } catch (error) {
@@ -328,7 +354,7 @@ const Auth: FC = () => {
     }
     setTimeout(() => {
       setErrorMessage("");
-    }, 4000);    
+    }, 4000);
   };
 
   // A funçao handleRegisterSubmit é para enviar os dados de cadastro
@@ -338,7 +364,7 @@ const Auth: FC = () => {
     { setSubmitting }: FormikHelpers<RegisterValues>
   ) => {
     try {
-      const submit = await registerUser(values); 
+      const submit = await registerUser(values);
       console.log(submit.message);
       setSuccess(submit.message);
       if (submit.message === 'Usuário criado com sucesso') {
@@ -376,17 +402,21 @@ const Auth: FC = () => {
   // Formik configurado para tratar login e cadastro dinamicamente
   return (
     <Container>
-<Card>
-  {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
-  {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0'}}/>{success}</FloatingSuccess>}
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <img
-      src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
-      style={{ width: '100px', height: '100px' }}
-      alt=""
-    />
-    {isLogin ? <CardTitle>Login</CardTitle> : <CardTitle>Cadastro</CardTitle>}
-  </div>
+      <Card>
+        {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
+        {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0' }} />{success}</FloatingSuccess>}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img
+            src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
+            style={{ width: '100px', height: '100px' }}
+            alt=""
+          />
+          {isLogin ? <CardTitle>Login</CardTitle> : <CardTitle>Cadastro</CardTitle>}
+        </div>
+
+        <HomeButton onClick={() => navigate('/')}>
+        Página Inicial
+       </HomeButton>
 
         <Formik
           initialValues={isLogin ? { email: "", senha: "" } : { nome: "", email: "", senha: "" }} // Adiciona nome se for cadastro
@@ -411,7 +441,7 @@ const Auth: FC = () => {
                 <Label htmlFor="senha">Senha</Label>
                 <InputField type="password" name="senha" placeholder="Preencha sua senha" />
               </Form.Group>
-              
+
               {isLogin ? (
                 <p
                   style={{
@@ -441,16 +471,15 @@ const Auth: FC = () => {
                   Já possui uma conta? Faça login!
                 </p>
               )}
-              
+
               <BtnRegister variant="primary" type="submit">
                 {buttonText}
               </BtnRegister>
 
-            
-                 {!isLogin ? (
-              <p></p>
+              {!isLogin ? (
+                <p></p>
               ) : (
-                <p style={{ textAlign: 'center', alignSelf: 'center', alignItems: 'center', color: '#fff', margin: '0', fontSize: '1.4rem', fontWeight: '600'}}>Ainda não possui uma conta? <P onClick={handleRegisterClick}>Cadastre-se!</P></p>
+                <p style={{ textAlign: 'center', alignSelf: 'center', alignItems: 'center', color: '#fff', margin: '0', fontSize: '1.4rem', fontWeight: '600' }}>Ainda não possui uma conta? <P onClick={handleRegisterClick}>Cadastre-se!</P></p>
               )}
             </StyledForm>
           )}
@@ -458,29 +487,28 @@ const Auth: FC = () => {
 
         {/* Modal para a funcionalidade de recuperar senha, abre um menu para o usuario inserir seu e-mail e prosseguir com a recuperação */}
         {modal && (
-                <ModalOverlay onClick={toggleModal}>
-                  <ModalContent onClick={(e) => e.stopPropagation()}>
-                    <CloseModalButton onClick={toggleModal}>×</CloseModalButton>
-                    <h1>Por favor, insira o e-mail da sua conta:</h1>
-                    <Formik
-                      initialValues={{ email: '' }}
-                      onSubmit={handleRecoverEmail}
-                    >
-                      {({ handleSubmit }: FormikProps<RecoverValue>) => (
-                        <Form onSubmit={handleSubmit}>
-                        <Form.Group className="mb-3" controlId="email">
-                          <InputField name="email" type="email" placeholder="Digite seu e-mail" />
-                          <BtnSend type="submit">
-                            Enviar
-                          </BtnSend>
-                        </Form.Group>
-                        </Form>
-                      )}
-                    </Formik>
-                  </ModalContent>
-                </ModalOverlay>
+          <ModalOverlay onClick={toggleModal}>
+            <ModalContent onClick={(e) => e.stopPropagation()}>
+              <CloseModalButton onClick={toggleModal}>×</CloseModalButton>
+              <h1>Por favor, insira o e-mail da sua conta:</h1>
+              <Formik
+                initialValues={{ email: '' }}
+                onSubmit={handleRecoverEmail}
+              >
+                {({ handleSubmit }: FormikProps<RecoverValue>) => (
+                  <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3" controlId="email">
+                      <InputField name="email" type="email" placeholder="Digite seu e-mail" />
+                      <BtnSend type="submit">
+                        Enviar
+                      </BtnSend>
+                    </Form.Group>
+                  </Form>
                 )}
-
+              </Formik>
+            </ModalContent>
+          </ModalOverlay>
+        )}
       </Card>
     </Container>
   );

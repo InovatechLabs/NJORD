@@ -63,8 +63,8 @@ export default function CsvManager() {
   };
 
   return (
-    <div style={{ padding: '20px', backgroundColor: cinzaEscuro, minHeight: '100vh' }}>
-     <div style={{backgroundColor: 'white', borderRadius: '30px', maxWidth: '30%', padding: '20px'}}>
+    <div style={{ color:'white', padding: '20px', backgroundColor: cinzaEscuro, minHeight: '100vh' }}>
+     <div style={{backgroundColor: '#373F55', borderRadius: '5px', maxWidth: '30%', padding: '20px'}}>
   <h2>Gerenciador de CSV</h2>
   <input type="file" accept=".csv" onChange={handleFileUpload} /> 
   </div>

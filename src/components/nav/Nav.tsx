@@ -131,9 +131,14 @@ function NavBar({ onAboutClick }: NavProps) {
     navigate('/auth');
   }
 
+  const handleCsvClick = () => {
+    navigate('/csv');
+  }
+
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
 
   return (
     <NavContainer>
@@ -146,8 +151,8 @@ function NavBar({ onAboutClick }: NavProps) {
           <img src="https://i.imgur.com/JQsOttz.png" width="30" height="30" alt="Dashboard" />
           Dashboard
         </NavItem>
-        <NavItem>
-          <img src="https://static.thenounproject.com/png/141961-200.png" width="20" height="20" alt="Comparação" />
+        <NavItem onClick={handleCsvClick} >
+          <img src="https://static.thenounproject.com/png/141961-200.png" width="20" height="20" alt="Comparação"/>
           Comparação de dados
         </NavItem>
         {isAuthenticated ? (

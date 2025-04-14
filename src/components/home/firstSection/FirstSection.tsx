@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
+import NavBar from "../../nav/Nav";
 
 export default function FirstSection() {
     const ImageContainer = styled.div`
@@ -151,7 +152,7 @@ transition: .3s;
                 <img
                     src="https://i.imgur.com/z5ECya2.png"
                     alt="Imagem de fundo"
-                    style={{ width: "100%", height: "412px" }}
+                    style={{ width: "100%", height: "515px" }}
                 />
                 <Container>
                     <TextWrapper>
@@ -164,7 +165,7 @@ transition: .3s;
                 </Container>
                 <ButtonsDiv>
                     <Button>Comece já</Button>
-                    <Button2>Saiba mais</Button2>
+                    <Button2 >Saiba mais</Button2>
                 </ButtonsDiv>
             </ImageContainer>
         </>

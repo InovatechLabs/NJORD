@@ -9,6 +9,7 @@ import umiditySvg from '../../src/images/image 14.png';
 import uvSvg from '../../src/images/image 15.png';
 import windSvg from '../../src/images/image 16.png';
 import tempSvg from '../../src/images/Layer_1.png';
+import { Form, Button } from "react-bootstrap";
 import {
   XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
   AreaChart,
@@ -34,8 +35,8 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      
-    console.log("Datas enviadas:", formattedStart, formattedEnd);
+
+      console.log("Datas enviadas:", formattedStart, formattedEnd);
       const res = await axios.get("http://localhost:3000/api/csv/dashboard", {
         params: {
           start: formattedStart,
@@ -51,7 +52,7 @@ export default function Dashboard() {
         });
         return cleanedEntry;
       });
-  
+
       setData(cleanedData);
     } catch (err) {
       alert("Erro ao buscar dados do dashboard");
@@ -65,7 +66,7 @@ export default function Dashboard() {
     const d = String(date.getDate()).padStart(2, '0');
     return `${y}-${m}-${d}`;
   }
-  
+
   const formattedStart = formatDateToISO(startDate);
   const formattedEnd = formatDateToISO(endDate);
 
@@ -74,7 +75,7 @@ export default function Dashboard() {
     const soma = data.reduce((acc, d) => acc + Number(d[campo]), 0);
     return parseFloat((soma / data.length).toFixed(2));
   };
-  
+
   const calcularMax = (campo: keyof CsvData): number => {
     if (data.length === 0) return 0;
     return Math.max(...data.map((d) => Number(d[campo])));
@@ -82,44 +83,60 @@ export default function Dashboard() {
 
   return (
     <>
-    <GlobalStyles />
-    <Nav />
-    <div style={{ padding: 20 }}>
-      <h1>Dashboard Meteorológico - Njord</h1>
-      <button onClick={fetchData}>Gerar gráfico</button>
-      <div style={{ display: "flex", gap: 20, marginBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>   
-        <DatePickerWrapper>
-          <label style={{ color: '#fff'}}>Data Início:</label>
-          <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
-            selectsStart
-            startDate={startDate}
-            endDate={endDate}
-            dateFormat="yyyy-MM-dd"
-            customInput={<CustomDateInput />}
-          />
-       
-          <label style={{ color: '#fff'}}>Data Fim:</label>
-          <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
-            selectsEnd
-            startDate={startDate}
-            endDate={endDate}
-            dateFormat="yyyy-MM-dd"
-            customInput={<CustomDateInput />}
-          />
-     </DatePickerWrapper>
-        <div>
-          <label>Detalhamento:</label>
-          <select value={groupByHour ? "hora" : "dia"} onChange={e => setGroupByHour(e.target.value === "hora")}> 
-            <option value="hora">Por Hora</option>
-            <option value="dia">Por Dia</option>
-          </select>
-        </div>
-      </div>
+      <GlobalStyles />
+      <Nav />
+      <div style={{ padding: 20 }}>
+        <h1 style={{color:'white'}}>Dashboard Meteorológico - Njord</h1>
+        <GraphBtn onClick={fetchData}>Gerar gráfico</GraphBtn>
+        <div style={{ display: "flex", gap: 50, marginBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+          <DatePickerWrapper>
+            <label style={{ color: '#fff' }}>Data Início:</label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="yyyy-MM-dd"
+              customInput={<CustomDateInput />}
+            />
 
+            <label style={{ color: '#fff' }}>Data Fim:</label>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              dateFormat="yyyy-MM-dd"
+              customInput={<CustomDateInput />}
+            />
+          </DatePickerWrapper>
+
+          <div style={{ display: "flex", gap: 10 }}>
+            <label style={{ color: '#fff' }}>Detalhamento:</label>
+            <select
+              value={groupByHour ? "hora" : "dia"}
+              onChange={e => setGroupByHour(e.target.value === "hora")}
+              style={{
+                backgroundColor: "#373F55",
+                color: "#fff",
+                padding: "6px 12px",
+                borderRadius: "5px",
+                border: "none",
+                font: "bold",
+              }}
+            >
+              <option value="hora" style={{ backgroundColor: "#373F55", color: "#fff" }}>
+                Por Hora
+              </option>
+              <option value="dia" style={{ backgroundColor: "#373F55", color: "#fff" }}>
+                Por Dia
+              </option>
+            </select>
+          </div>
+        </div>
+        
         <div
           style={{
             display: "flex",
@@ -127,6 +144,7 @@ export default function Dashboard() {
             alignItems: "center",
             justifyContent: "center",
             fontSize: "1.5rem",
+            font: "bold",
           }}
         >
           {/* Temperatura Média */}
@@ -158,39 +176,40 @@ export default function Dashboard() {
           </div>
         </div>
 
-      <div style={{ marginTop: 30 }}>
-        <h3>Gráfico de Temperatura e Umidade</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={data}>
-            <XAxis dataKey={groupByHour ? "Time" : "Date"} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Area type="monotone" dataKey="Hum_%" fill="#4FC3F7" stroke="#4FC3F7"/>
-            <Area type="monotone" dataKey="Temp_C" fill="#FF6B6B" stroke="#FF6B6B"/>
-  
-            <CartesianGrid opacity={0.2} vertical={false} />
-          </AreaChart>
-          </ResponsiveContainer>
-      </div>
+        <div style={{ color: "white", marginTop: 30 }}>
+          <h3>Gráfico de Temperatura e Umidade</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={data}>
+              <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Area type="monotone" dataKey="Hum_%" fill="#4FC3F7" stroke="#4FC3F7" />
+              <Area type="monotone" dataKey="Temp_C" fill="#FF6B6B" stroke="#FF6B6B" />
 
-      <div style={{ marginTop: 30 }}>
-        <h3>Gráfico de Radiação Solar e Vento</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={data}>
-            <XAxis dataKey={groupByHour ? "Time" : "Date"} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Area type="monotone" dataKey="SR_Wm2" fill="#8884d8" stroke="#8884d8" name="Radiação W/m²" />
-            <Area type="monotone" dataKey="WindSpeed_Inst" fill="#00bcd4" stroke="#00bcd4" name="Vento Inst. (m/s)" />
-          </AreaChart>
-        </ResponsiveContainer>
+              <CartesianGrid opacity={0.2} vertical={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+
+        <div style={{ color: "white", marginTop: 30 }}>
+          <h3>Gráfico de Radiação Solar e Vento</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={data}>
+              <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Area type="monotone" dataKey="SR_Wm2" fill="#8884d8" stroke="#8884d8" name="Radiação W/m²" />
+              <Area type="monotone" dataKey="WindSpeed_Inst" fill="#00bcd4" stroke="#00bcd4" name="Vento Inst. (m/s)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
-    </div>
     </>
   );
 }
+
 
 export const DatePickerWrapper = styled.div`
   .custom-datepicker {
@@ -249,5 +268,31 @@ export const DatePickerWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 35px;
+`;
+
+const GraphBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  border: 2px solid #fff;
+  border-radius: 12px;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 30px;
+  align-self: center;
+
+  &:hover {
+    background-color: #fff;
+    color: #0D1B2A;
+  }
+
+  svg {
+    font-size: 1.5rem;
+  }
 `;
