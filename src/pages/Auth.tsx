@@ -1,11 +1,13 @@
 import React, { FC, useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { Formik, Field, FormikProps, FormikHelpers } from "formik";
+import { Formik, Field, FormikProps, FormikHelpers, FormikProvider, validateYupSchema, FormikContext } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser, RecoverPassword } from "../services/auth";
 import { useAuth } from "../contexts/AuthContext";
 import styled, { keyframes } from "styled-components";
+import TextDrop from "../components/auth/TextDrop";
+import Footer from '../components/home/footer/Footer';
 
 interface FormValues {
   email: string;
@@ -25,16 +27,28 @@ interface RecoverValue {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #0D1B2A;
+  justify-content: space-evenly;
+  flex-direction: row-reverse;
+  padding: 20px;
+  background: linear-gradient(to right, black 20%, transparent 70%), url(https://www.citigroup.com/rcs/v1/siteIds/citigpa/asset/645dfa9c6fb7271e5e03d3b7.jpg);
   min-height: 100vh;
+  object-fit: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+
+  @media(max-width: 950px) {
+    flex-direction: column;
+  }
+
 `;
 
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 600px;
+  max-width: 600px;
   height: 700px;
   background-color: #273D67;
   border-radius: 5px;
@@ -43,10 +57,11 @@ const Card = styled.div`
 
 const CardTitle = styled.h1`
   font-family: 'Lavishly Yours', sans-serif;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 600;
   color: #fff;
   cursor: pointer;
+  margin: 5px;
 `;
 
 const InputField = styled(Field)`
@@ -75,7 +90,7 @@ const StyledForm = styled(Form)`
 
 const Label = styled.label`
   color: #fff;
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   margin: 0;
   font-weight: 600;
 `;
@@ -90,7 +105,7 @@ const BtnRegister = styled(Button) <{ children?: React.ReactNode }>`
   color: #fff;
   font-size: 1.2rem;
   letter-spacing: 2px;
-  margin-top: 50px;
+  margin-top: 10px;
   cursor: pointer;
   transition: .3s;
   &:hover {
@@ -165,7 +180,7 @@ const HomeButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 30px;
+  margin-top: 20px;
   align-self: center;
 
   &:hover {
@@ -295,7 +310,21 @@ const BtnSend = styled.button`
   cursor: pointer;
 `;
 
+const PasswordContainer = styled.div`
+  background: white;
+  width: 100%;
+  height: 15px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  border-radius: 10px;
+`;
 
+const PasswordBar = styled.div`
+  background: #535bf2;
+  width: 100px;
+  height: 100%;
+  border-radius: 10px;
+`;
 
 const Auth: FC = () => {
   const navigate = useNavigate();
@@ -370,6 +399,9 @@ const Auth: FC = () => {
       if (submit.message === 'Usuário criado com sucesso') {
         setisLogin(true);
       }
+      setTimeout(() => {
+        setSuccess("");
+      }, 4000);
     } catch (error) {
       console.error('Erro ao fazer cadastro:', error);
       setErrorMessage("E-mail já cadastrado.")
@@ -378,6 +410,7 @@ const Auth: FC = () => {
     } setTimeout(() => {
       setErrorMessage("");
     }, 4000);
+   
   };
 
   const handleRecoverEmail = async (
@@ -397,14 +430,69 @@ const Auth: FC = () => {
     }, 4000);
   };
 
+  const passwordStrength = (senha: string) => {
+    
+    let value: number = 0;
+    let color: string = '';
+    let label: string = '';
+    let passwordLengthMatch: boolean = false;
+
+    let upperCaseRegex = /[A-Z]/.test(senha);
+    let numberRegex = /[0-9]/.test(senha);
+    let lowerCaseRegex = /[a-z]/.test(senha);
+    let specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+
+    if (upperCaseRegex) value += 20;
+    if (lowerCaseRegex) value += 20;
+    if (numberRegex) value += 20;
+    if (specialCharacterRegex) value += 20;
+    if (senha.length >= 8) value += 20;
+
+    if(senha.length >= 8) {
+      passwordLengthMatch = true;
+    }
+
+    switch(value) {
+      case 20:
+        color = 'red';
+        label = '🔴Muito fraca';
+        break;
+      case 40:
+        color = 'orange';
+        label = '🟠Fraca';
+        break;
+      case 60: 
+        color = 'yellow';
+        label = '🟡Média';
+        break;
+      case 80:
+        color = 'yellowgreen';
+        label = '🟢Boa';
+        break;
+      case 100:
+        color = 'green';
+        label = '🟢Excelente';
+        break;
+      default:
+        color = 'gray';
+        label = 'Muito fraca'
+      break;
+    }
+
+    return { value, color, label, passwordLengthMatch };
+
+  }
+
+
   const buttonText = isLogin ? "Entrar" : "Cadastrar";
 
   // Formik configurado para tratar login e cadastro dinamicamente
-  return (
+  return (   
+    <>
     <Container>
       <Card>
         {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
-        {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0' }} />{success}</FloatingSuccess>}
+        {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0' }} alt="success"/>{success}</FloatingSuccess>}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
@@ -425,7 +513,7 @@ const Auth: FC = () => {
           onSubmit={isLogin ? handleSubmit : handleRegisterSubmit
           }
         >
-          {({ handleSubmit }: FormikProps<FormValues | RegisterValues>) => (
+          {({ handleSubmit, values }: FormikProps<FormValues | RegisterValues>) => (
             <StyledForm onSubmit={handleSubmit}>
               {!isLogin && (
                 <Form.Group className="mb-3" controlId="nome">
@@ -441,6 +529,19 @@ const Auth: FC = () => {
                 <Label htmlFor="senha">Senha</Label>
                 <InputField type="password" name="senha" placeholder="Preencha sua senha" />
               </Form.Group>
+              
+              {!isLogin && (
+                
+                <PasswordContainer>
+                  <PasswordBar style={{width: `${passwordStrength(values.senha).value}%`, backgroundColor: `${passwordStrength(values.senha).color}`}}/>
+                  {passwordStrength(values.senha).value > 0 && (
+                     <div style={{ color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Força da senha:
+                     <p style={{ marginLeft: '5px' }}>{passwordStrength(values.senha).label}</p>
+                     </div>
+                  )}
+                 
+                </PasswordContainer>
+              )}
 
               {isLogin ? (
                 <p
@@ -461,7 +562,7 @@ const Auth: FC = () => {
                   style={{
                     textAlign: 'center',
                     color: '#fff',
-                    margin: '0',
+                    margin: '10px',
                     fontSize: '1.4rem',
                     fontWeight: '200',
                     cursor: 'pointer',
@@ -472,7 +573,7 @@ const Auth: FC = () => {
                 </p>
               )}
 
-              <BtnRegister variant="primary" type="submit">
+              <BtnRegister variant="primary" type="submit" disabled={passwordStrength(values.senha).value < 60 || passwordStrength(values.senha).passwordLengthMatch === false}>
                 {buttonText}
               </BtnRegister>
 
@@ -510,7 +611,13 @@ const Auth: FC = () => {
           </ModalOverlay>
         )}
       </Card>
+      <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <TextDrop>Uma iniciativa com impacto tecnológico, social e ambiental.<br /><br />
+      Desenvolvida para ampliar a segurança da navegação e facilitar o acesso a dados meteorológicos, nossa ferramenta permite acompanhar em tempo real os registros de vento extremo em três estações da região.</TextDrop>
+      </div>
     </Container>
+    <Footer />
+    </>
   );
 };
 

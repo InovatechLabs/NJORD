@@ -1,6 +1,5 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import NavBar from "../../nav/Nav";
 
 export default function FirstSection() {
     const ImageContainer = styled.div`

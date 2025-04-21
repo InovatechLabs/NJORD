@@ -71,10 +71,10 @@ export default function CsvManager() {
   {csvData.length > 0 && (
          <ButtonContainer>
          <StyledButton onClick={handleSubmitToServer} variant="success">
-         <img src="https://www.svgrepo.com/show/347932/save.svg" style={{ width: '20px', height: '20px' }} />  Salvar no banco
+         <img src="https://www.svgrepo.com/show/347932/save.svg" style={{ width: '20px', height: '20px' }} alt=""/>  Salvar no banco
          </StyledButton>
          <StyledButton onClick={handleExport} variant="warning">
-         <img src="https://www.svgrepo.com/show/357723/export.svg" style={{ width: '20px', height: '20px' }} /> Exportar filtrado
+         <img src="https://www.svgrepo.com/show/357723/export.svg" style={{ width: '20px', height: '20px' }} alt=""/> Exportar filtrado
          </StyledButton>
        </ButtonContainer>
       )}
@@ -184,7 +184,6 @@ export default function CsvManager() {
 }
 
 const azulGelo = '#415A77';
-const azulProfundo = '#1B263B';
 const cinzaEscuro = '#0D1B2A';
 const verdeCiano = '#01af5b';
 const laranjaVibrante = '#FF9100';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Nav from '../components/nav/Nav';
 import DatePicker from "react-datepicker";
@@ -9,7 +9,7 @@ import umiditySvg from '../../src/images/image 14.png';
 import uvSvg from '../../src/images/image 15.png';
 import windSvg from '../../src/images/image 16.png';
 import tempSvg from '../../src/images/Layer_1.png';
-import { Form, Button } from "react-bootstrap";
+
 import {
   XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
   AreaChart,
@@ -149,28 +149,28 @@ export default function Dashboard() {
         >
           {/* Temperatura Média */}
           <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={tempSvg} style={{ width: 40, height: 40 }} />
+            <img src={tempSvg} style={{ width: 40, height: 40 }} alt=""/>
             <strong>Temp. Média:</strong>
             <span>{calcularMedia("Temp_C")} °C</span>
           </div>
 
           {/* Umidade Média */}
           <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={umiditySvg} style={{ width: 40, height: 40 }} />
+            <img src={umiditySvg} style={{ width: 40, height: 40 }} alt=""/>
             <strong>Umidade Média:</strong>
             <span>{calcularMedia("Hum_%")} %</span>
           </div>
 
           {/* Radiação Máxima */}
           <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={uvSvg} style={{ width: 50, height: 50 }} />
+            <img src={uvSvg} style={{ width: 50, height: 50 }} alt=""/>
             <strong>Radiação Máx:</strong>
             <span>{calcularMax("SR_Wm2")} W/m²</span>
           </div>
 
           {/* Vento Máximo */}
           <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={windSvg} style={{ width: 40, height: 40 }} />
+            <img src={windSvg} style={{ width: 40, height: 40 }} alt=""/>
             <strong>Vento Máx:</strong>
             <span>{calcularMax("WindSpeed_Inst")} m/s</span>
           </div>
