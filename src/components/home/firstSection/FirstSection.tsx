@@ -151,7 +151,7 @@ transition: .3s;
                 <img
                     src="https://i.imgur.com/z5ECya2.png"
                     alt="Imagem de fundo"
-                    style={{ width: "100%", height: "515px" }}
+                    style={{ width: "100%", height: "515px", objectFit: 'cover' }}
                 />
                 <Container>
                     <TextWrapper>

@@ -1,10 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import { Role } from './enums/role';
 
 interface IUser extends Document {
     nome: string;
     email: string;
     senha: string;
+    role: string;
     compararSenhas(senha: string): boolean;
     resetToken?: string;
     resetTokenExpires?: Date;
@@ -25,6 +27,11 @@ interface IUser extends Document {
       senha: { 
         type: String, 
         required: true 
+      },
+      role: {
+        type: String,
+        required: true,
+        enum: Role
       },
       resetToken: {
         type: String,

@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import { register, login, logout, getUserInfo, updateUserInfo } from '../controllers/userController';
 import { authenticate } from '../middlewares/verifyToken';
+import { authorizeAdmin } from '../middlewares/authorizeAdmin';
 
 const userRouter = Router();
 
@@ -14,5 +15,9 @@ userRouter.put("/update", authenticate, updateUserInfo);
 userRouter.get('/verify', authenticate, (req, res) => {
     res.status(200).json({ authenticated: true });
   });
+
+userRouter.get('/admin', authenticate, authorizeAdmin, (req, res) => {
+  res.json({ message: 'Acesso administrativo autorizado.'})
+})
 
 export default userRouter;

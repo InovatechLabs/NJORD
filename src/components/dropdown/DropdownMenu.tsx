@@ -51,7 +51,7 @@ const DropdownItem = styled.li`
 
 const DropdownMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { logout } = useAuth();
+  const { admin, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleSettingsClick = () => {
@@ -65,6 +65,9 @@ const DropdownMenu: React.FC = () => {
     >
       <DropdownButton>Minha Conta</DropdownButton>
       <DropdownList isOpen={isOpen}>
+        {admin && (
+          <DropdownItem>Administração</DropdownItem>
+        )}
         <DropdownItem onClick={ handleSettingsClick }>Configurações</DropdownItem>
         <DropdownItem onClick={ logout }>Sair</DropdownItem>
       </DropdownList>

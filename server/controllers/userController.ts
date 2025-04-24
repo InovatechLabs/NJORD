@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import User from '../models/user';
+import { Role } from '../models/enums/role';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -29,6 +30,7 @@ export const register = async (req: Request, res: Response) => {
             nome,
             email,
             senha, 
+            role: Role.user,
           });
           // Insere o usuario recem criado ao banco
         await novoUsuario.save();
@@ -58,7 +60,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
             return res.status(400).json({ message: 'Senha incorreta.' })
         }
 
-        const token = jwt.sign({ _id: usuarioExiste._id}, process.env.JWT_SECRET!, { expiresIn: '1h'});
+        const token = jwt.sign({ _id: usuarioExiste._id, role: usuarioExiste.role}, process.env.JWT_SECRET!, { expiresIn: '1h'});
         res.cookie('auth_token', token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production', // HTTPS em produção
