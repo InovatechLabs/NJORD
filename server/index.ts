@@ -10,6 +10,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/userRoutes';
 import recoverRouter from './routes/recoverPasswordRouter';
 import csvRouter from './routes/csvRoutes';
+import adminRouter from './routes/admin/userManagementRoutes';
 
 // Modelos
 import User from './models/user';
@@ -32,6 +33,8 @@ app.use(cookieParser());
 app.use("/api/user", userRouter);         // Autenticação
 app.use("/api/recover", recoverRouter);   // Recuperação de senha
 app.use("/api/csv", csvRouter);           // Upload de CSV
+
+app.use("/api/admin", adminRouter);
 
 // Rota de teste - listar usuários
 app.get('/listar', async (req: Request, res: Response) => {
