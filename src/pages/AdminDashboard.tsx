@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Table from "../components/ui/Table";
-import Card from "../components/ui/Card";
+import { Card } from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import Tabs, { TabsList, TabsTrigger } from "../components/ui/Tabs";
-import CalendarIcon from "../components/ui/CalendarIcon";
-import ChevronRightIcon from "../components/ui/ChevronRightIcon";
+import { User, Database } from 'lucide-react';
 import SettingsIcon from "../components/ui/SettingsIcon";
 import styled, { keyframes } from "styled-components";
 import { RefreshCcw } from "lucide-react";
+import DatabasePanel from "../components/adminDashboard/DatabasePanel";
 
 
 interface UserInfo {
@@ -29,6 +29,7 @@ export default function AdminDashboard() {
     const [nome, setNome] = useState(selectedUser?.nome || "");
     const [email, setEmail] = useState(selectedUser?.email || "");
     const [role, setRole] = useState("user");
+    const [selectedItem, setSelectedItem] = useState('Usuários');
 
 
     const toggleModal = () => {
@@ -42,6 +43,11 @@ function formatDate(dataISO: string): string {
     const ano = data.getFullYear();
     return `${dia}/${mes}/${ano}`;
   }
+
+  const sidebarItems = [
+    { name: 'Usuários', icon: User },
+    { name: 'Banco de dados', icon: Database },
+  ];
   
 
   const getRegisteredUsers = async () => {
@@ -115,27 +121,26 @@ function formatDate(dataISO: string): string {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <aside className="w-60 min-h-screen [background-color:#0D1B2A] text-white p-4 flex flex-col gap-4">
-        <h1 className="text-xl font-bold mb-6">NJORD</h1>
-        {['Usuários', 'Banco de dados', 'Product', 'Stock', 'Offer'].map((item) => (
+       <aside className="w-64 bg-blue-600 p-4 flex flex-col space-y-2">
+       <h1 className="text-xl font-bold mb-6 text-white p-2 items-center">Dashboard</h1>
+        {sidebarItems.map(({ name, icon: Icon }) => (
           <button
-            key={item}
-            className={`text-left px-3 py-2 rounded hover:bg-blue-700 ${item === 'Order' ? 'bg-white text-blue-600 font-semibold' : ''}`}
+            key={name}
+            onClick={() => setSelectedItem(name)}
+            className={`flex items-center gap-3 px-4 py-2 rounded-l-full transition-all duration-200 ease-in-out ${
+              selectedItem === name
+                ? 'bg-white text-blue-600 font-semibold  -mr-4 rounded-tl-md rounded-bl-md z-20'
+                : 'text-white hover:bg-blue-500 -mr-4 rounded-tl-md rounded-bl-md z-10 hover:scale-101'
+            }`}
           >
-            {item}
+            <Icon size={20} />
+            <span>{name}</span>
           </button>
         ))}
-        <div className="mt-auto text-sm text-white/70">
-          <div className="flex gap-2">
-            <a href="#">Facebook</a>
-            <a href="#">Twitter</a>
-            <a href="#">Google</a>
-          </div>
-        </div>
+        
       </aside>
-
-      {/* Main Content */}
-      <main className="flex-1 p-6 bg-gray-50">
+      {selectedItem == "Usuários" ? (
+        <main className="flex-1 p-6 bg-white-50">
         <h2 className="text-2xl font-semibold mb-2">Lista de usuários cadastrados no sistema</h2>
         <p className="text-gray-500 mb-4">{users.length} usuários registrados</p>
 
@@ -262,6 +267,13 @@ function formatDate(dataISO: string): string {
           </div>
         </div>
       </main>
+      ) : (
+        <div className="flex">
+           <main className="flex-1 p-6 bg-white-50">
+        <DatabasePanel />
+        </main>
+        </div>
+      )}    
     </div>
   );
 }

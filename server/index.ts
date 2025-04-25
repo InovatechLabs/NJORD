@@ -10,7 +10,7 @@ import cookieParser from 'cookie-parser';
 import userRouter from './routes/userRoutes';
 import recoverRouter from './routes/recoverPasswordRouter';
 import csvRouter from './routes/csvRoutes';
-import adminRouter from './routes/admin/userManagementRoutes';
+import adminRouter from './routes/admin/adminManagementRoutes';
 
 // Modelos
 import User from './models/user';
