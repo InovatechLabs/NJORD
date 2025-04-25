@@ -9,6 +9,7 @@ import AuthenticatedRoute from './components/auth/AuthenticatedRoute';
 import RecoverPassword from './pages/RecoverPassword';
 import CsvManagerPage from './pages/CsvManager';
 import Dashboard from './pages/Dashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
     return (
@@ -35,6 +36,7 @@ function App() {
             />
             <Route path='/csv' element={<CsvManagerPage />} />
             <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/admin/dashboard' element={<AdminDashboard />} />
         </Routes>
     </Router>
     </AuthProvider>

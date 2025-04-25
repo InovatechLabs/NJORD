@@ -57,6 +57,9 @@ const DropdownMenu: React.FC = () => {
   const handleSettingsClick = () => {
     navigate('/settings');
   }
+  const handleAdminDashboardClick = () => {
+    navigate('/admin/dashboard')
+  }
 
   return (
     <DropdownContainer
@@ -66,7 +69,7 @@ const DropdownMenu: React.FC = () => {
       <DropdownButton>Minha Conta</DropdownButton>
       <DropdownList isOpen={isOpen}>
         {admin && (
-          <DropdownItem>Administração</DropdownItem>
+          <DropdownItem onClick={handleAdminDashboardClick}>Administração</DropdownItem>
         )}
         <DropdownItem onClick={ handleSettingsClick }>Configurações</DropdownItem>
         <DropdownItem onClick={ logout }>Sair</DropdownItem>
