@@ -119,7 +119,7 @@ function formatDate(dataISO: string): string {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       {/* Sidebar */}
        <aside className="w-64 bg-blue-600 p-4 flex flex-col space-y-2">
        <h1 className="text-xl font-bold mb-6 text-white p-2 items-center">Dashboard</h1>

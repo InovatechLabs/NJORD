@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import GlobalStyles from "../components/globalstyles/GlobalStyles";
 import { CustomDateInput } from "../components/dashboard/CustomDateInput";
+import DashBoardPresentation from "../components/dashboard/DashboardPresentation";
+import image from '../images/path.png';
 import umiditySvg from '../../src/images/image 14.png';
 import uvSvg from '../../src/images/image 15.png';
 import windSvg from '../../src/images/image 16.png';
@@ -23,8 +25,13 @@ interface CsvData {
   Time: string;
   Temp_C: number;
   "Hum_%": number;
-  SR_Wm2: number;
+  SR_Wm2: number
   WindSpeed_Inst: number;
+  Press_Bar: number;
+  WindPeak_ms: number;
+  WindSpeed_Avg: number;
+  WindDir_Inst: number;
+  WindDir_Avg: number;
 }
 
 export default function Dashboard() {
@@ -83,133 +90,138 @@ export default function Dashboard() {
 
   return (
     <>
-      <GlobalStyles />
-      <Nav />
-      <div style={{ padding: 20 }}>
-        <h1 style={{color:'white'}}>Dashboard Meteorológico - Njord</h1>
-        <GraphBtn onClick={fetchData}>Gerar gráfico</GraphBtn>
-        <div style={{ display: "flex", gap: 50, marginBottom: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-          <DatePickerWrapper>
-            <label style={{ color: '#fff' }}>Data Início:</label>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              dateFormat="yyyy-MM-dd"
-              customInput={<CustomDateInput />}
-            />
+  <GlobalStyles />
+  <Nav />
+  <DashBoardPresentation />
+  
+  <div className="flex min-h-screen bg-[#1c1c30]">
+    {/* Menu lateral */}
+    <aside className="w-64 bg-[#262646] p-4 flex flex-col space-y-4 sticky top-0 self-start min-h-20">
+      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center ">Menu</h1>
 
-            <label style={{ color: '#fff' }}>Data Fim:</label>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              dateFormat="yyyy-MM-dd"
-              customInput={<CustomDateInput />}
-            />
-          </DatePickerWrapper>
-
-          <div style={{ display: "flex", gap: 10 }}>
-            <label style={{ color: '#fff' }}>Detalhamento:</label>
-            <select
-              value={groupByHour ? "hora" : "dia"}
-              onChange={e => setGroupByHour(e.target.value === "hora")}
-              style={{
-                backgroundColor: "#373F55",
-                color: "#fff",
-                padding: "6px 12px",
-                borderRadius: "5px",
-                border: "none",
-                font: "bold",
-              }}
-            >
-              <option value="hora" style={{ backgroundColor: "#373F55", color: "#fff" }}>
-                Por Hora
-              </option>
-              <option value="dia" style={{ backgroundColor: "#373F55", color: "#fff" }}>
-                Por Dia
-              </option>
-            </select>
-          </div>
-        </div>
-        
-        <div
-          style={{
-            display: "flex",
-            gap: 20,
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "1.5rem",
-            font: "bold",
-          }}
-        >
-          {/* Temperatura Média */}
-          <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={tempSvg} style={{ width: 40, height: 40 }} alt=""/>
-            <strong>Temp. Média:</strong>
-            <span>{calcularMedia("Temp_C")} °C</span>
-          </div>
-
-          {/* Umidade Média */}
-          <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={umiditySvg} style={{ width: 40, height: 40 }} alt=""/>
-            <strong>Umidade Média:</strong>
-            <span>{calcularMedia("Hum_%")} %</span>
-          </div>
-
-          {/* Radiação Máxima */}
-          <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={uvSvg} style={{ width: 50, height: 50 }} alt=""/>
-            <strong>Radiação Máx:</strong>
-            <span>{calcularMax("SR_Wm2")} W/m²</span>
-          </div>
-
-          {/* Vento Máximo */}
-          <div style={{ color: "#fff", display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={windSvg} style={{ width: 40, height: 40 }} alt=""/>
-            <strong>Vento Máx:</strong>
-            <span>{calcularMax("WindSpeed_Inst")} m/s</span>
-          </div>
-        </div>
-
-        <div style={{ color: "white", marginTop: 30 }}>
-          <h3>Gráfico de Temperatura e Umidade</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data}>
-              <XAxis dataKey={groupByHour ? "Time" : "Date"} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Area type="monotone" dataKey="Hum_%" fill="#4FC3F7" stroke="#4FC3F7" />
-              <Area type="monotone" dataKey="Temp_C" fill="#FF6B6B" stroke="#FF6B6B" />
-
-              <CartesianGrid opacity={0.2} vertical={false} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div style={{ color: "white", marginTop: 30 }}>
-          <h3>Gráfico de Radiação Solar e Vento</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={data}>
-              <XAxis dataKey={groupByHour ? "Time" : "Date"} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Area type="monotone" dataKey="SR_Wm2" fill="#8884d8" stroke="#8884d8" name="Radiação W/m²" />
-              <Area type="monotone" dataKey="WindSpeed_Inst" fill="#00bcd4" stroke="#00bcd4" name="Vento Inst. (m/s)" />
-            </AreaChart>
-          </ResponsiveContainer>
+      {/* Temperatura Média */}
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={tempSvg} alt="" className="w-10 h-10" />
+        <div className="flex flex-col ">
+          <strong>Temp. Média:</strong>
+          <span>{calcularMedia("Temp_C")} °C</span>
         </div>
       </div>
-    </>
+
+      {/* Umidade Média */}
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={umiditySvg} alt="" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <strong>Umidade Média:</strong>
+          <span>{calcularMedia("Hum_%")} %</span>
+        </div>
+      </div>
+
+      {/* Radiação Máxima */}
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={uvSvg} alt="" className="w-12 h-12" />
+        <div className="flex flex-col">
+          <strong>Radiação Máx:</strong>
+          <span>{calcularMax("SR_Wm2")} W/m²</span>
+        </div>
+      </div>
+
+      {/* Vento Máximo */}
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={windSvg} alt="" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <strong>Vento Máx:</strong>
+          <span>{calcularMax("WindSpeed_Inst")} m/s</span>
+        </div>
+      </div>
+    </aside>
+
+    {/* Conteúdo principal */}
+    <div className="flex-1 p-6 flex flex-col items-center text-white">
+      <Title>Para começar, selecione o intervalo de datas para a visualização dos dados:</Title>
+
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <DatePickerWrapper>
+          <label style={{ color: '#fff' }}>Data Início:</label>
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            dateFormat="yyyy-MM-dd"
+            customInput={<CustomDateInput />}
+          />
+
+          <label style={{ color: '#fff' }}>Data Fim:</label>
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            dateFormat="yyyy-MM-dd"
+            customInput={<CustomDateInput />}
+          />
+          <GraphBtn onClick={fetchData}>Gerar gráfico</GraphBtn>
+        </DatePickerWrapper>
+      </div>
+
+      <h3>Gráfico de Temperatura e Umidade</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={data}>
+          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Area type="monotone" dataKey="Hum_%" fill="#4FC3F7" stroke="#4FC3F7" />
+          <Area type="monotone" dataKey="Temp_C" fill="#FF6B6B" stroke="#FF6B6B" />
+          <CartesianGrid opacity={0.2} vertical={false} />
+        </AreaChart>
+      </ResponsiveContainer>
+
+      <h3>Gráfico de Radiação Solar e Vento</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={data}>
+          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+          <YAxis domain={[0, 400]} />
+          <Tooltip />
+          <Legend />
+          <Area type="monotone" dataKey="WindDir_Avg" fill="#36ff2f" stroke="#36ff2f" name="Direção média do Vento (°)" />
+          <Area type="monotone" dataKey="WindSpeed_Inst" fill="#00bcd4" stroke="#00bcd4" name="Velocidade Inst. do Vento (m/s)" />
+        </AreaChart>
+      </ResponsiveContainer>
+
+      <h3>Gráfico de Direção Média & Instantânea do Vento</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={data}>
+          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+          <YAxis domain={[0, 1100]} />
+          <Tooltip />
+          <Legend />
+          <Area type="monotone" dataKey="Press_Bar" fill="#ff4a77" stroke="#ff4a77" name="Pressão atmosférica" />
+          <Area type="monotone" dataKey="SR_Wm2" fill="#fbff16" stroke="#fbff16" name="Radiação solar (W/m²)" />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  </div>
+</>
   );
 }
 
+const Title = styled.h1`
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #fff;
+`;
+
+const Image = styled.img`
+   position: absolute;
+    width: 100%; 
+    height: auto;
+    z-index: 1; 
+`;
 
 export const DatePickerWrapper = styled.div`
   .custom-datepicker {
@@ -268,7 +280,7 @@ export const DatePickerWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 35px;
+  gap: 15px;
 `;
 
 const GraphBtn = styled.button`
@@ -279,12 +291,11 @@ const GraphBtn = styled.button`
   border: 2px solid #fff;
   border-radius: 12px;
   color: #fff;
-  padding: 10px 20px;
+  padding: 8px 20px;
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 30px;
   align-self: center;
 
   &:hover {
