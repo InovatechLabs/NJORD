@@ -94,10 +94,19 @@ export default function Dashboard() {
   <Nav />
   <DashBoardPresentation />
   
-  <div className="flex min-h-screen bg-[#1c1c30]">
+  <div className="flex min-h-screen bg-[#1c142f]">
     {/* Menu lateral */}
-    <aside className="w-64 bg-[#262646] p-4 flex flex-col space-y-4 sticky top-0 self-start min-h-20">
-      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center ">Menu</h1>
+    <aside className="w-64 p-4 flex flex-col space-y-4 sticky top-0 self-start bg-[#271b41]">
+      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center ">Sumário</h1>
+
+
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={tempSvg} alt="" className="w-10 h-10" />
+        <div className="flex flex-col ">
+          <strong>Temp. Máx:</strong>
+          <span>{calcularMax("Temp_C")} °C</span>
+        </div>
+      </div>
 
       {/* Temperatura Média */}
       <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
@@ -117,12 +126,28 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={umiditySvg} alt="" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <strong>Umidade Máxima:</strong>
+          <span>{calcularMax("Hum_%")} %</span>
+        </div>
+      </div>
+
       {/* Radiação Máxima */}
       <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
         <img src={uvSvg} alt="" className="w-12 h-12" />
         <div className="flex flex-col">
           <strong>Radiação Máx:</strong>
           <span>{calcularMax("SR_Wm2")} W/m²</span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={uvSvg} alt="" className="w-12 h-12" />
+        <div className="flex flex-col">
+          <strong>Radiação Média:</strong>
+          <span>{calcularMedia("SR_Wm2")} W/m²</span>
         </div>
       </div>
 

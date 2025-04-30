@@ -34,7 +34,7 @@ app.use("/api/user", userRouter);         // Autenticação
 app.use("/api/recover", recoverRouter);   // Recuperação de senha
 app.use("/api/csv", csvRouter);           // Upload de CSV
 
-app.use("/api/admin", adminRouter);
+app.use("/api/admin", adminRouter);       // Rotas para admin
 
 // Rota de teste - listar usuários
 app.get('/listar', async (req: Request, res: Response) => {

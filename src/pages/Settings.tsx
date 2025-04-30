@@ -117,30 +117,51 @@ const SubmitButton = styled.button`
   }
 `;
 
-const CancelButton = styled.button`
-  width: 100%;
-  padding: 12px;
-  background-color: #FF9100; 
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #E67A00; 
-  }
-  @media(max-width: 455px) {
-    width: 65%;
-  }
-`;
-
 const ErrorMessage = styled.p`
   color: #D50000; 
   text-align: center;
   font-weight: bold;
+`;
+
+export const TwoFAContainer = styled.div`
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .qr-code-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .qr-code-container img {
+    max-width: 200px;
+    margin-bottom: 20px;
+  }
+`;
+
+export const CancelButton = styled.button`
+  background-color: #ccc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #999;
+  }
 `;
 
 interface UserInfo {
@@ -156,6 +177,9 @@ const Settings: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
+  const [token, setToken] = useState<string>(''); 
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -220,6 +244,43 @@ const Settings: React.FC = () => {
     });
   };
 
+  const enable2FA = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/user/enable-2fa', {
+      method: 'POST',
+      credentials: 'include',
+      });
+      const data = await response.json();
+      setQrCodeDataUrl(data.qrCode);
+    } catch (error) {
+      console.error('Erro ao ativar o 2FA:', error);
+    }
+  };
+  
+  const verify2FA = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/user/verify-2fa', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          token: token
+        })
+      });
+      const data = await response.json();
+      if (data.message === '2FA verificado com sucesso!') {
+        setIs2FAEnabled(true);
+      } else {
+        alert('Código inválido, tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao verificar 2FA:', error);
+    }
+  };
+
+
   return (
     <>
     <Nav />
@@ -257,12 +318,33 @@ const Settings: React.FC = () => {
                 <InfoIcon>❓</InfoIcon>
                 <Tooltip>Sua senha está criptografada por questões de segurança.</Tooltip>
                 </div>
-            <SubmitButton onClick={handleSubmit}>Salvar</SubmitButton>
-            <CancelButton onClick={() => console.log('Cancelando alterações')}>Cancelar</CancelButton>
+                <SubmitButton onClick={handleSubmit}>Salvar</SubmitButton>
           </>
         ) : (
           <p>Carregando...</p>
         )}
+        {!is2FAEnabled && (
+              <div className="twofa-container" style={{ marginTop: '30px'}}>
+                <h2>Ativar 2FA</h2>
+                <p>Para aumentar a segurança da sua conta, ative a autenticação em dois fatores.</p>
+                <SubmitButton onClick={enable2FA}>Ativar 2FA</SubmitButton>
+
+                {/* Se o QR Code foi gerado, exibe o QR Code e campo de verificação */}
+                {qrCodeDataUrl && (
+                  <div className="qr-code-container">
+                    <img src={qrCodeDataUrl} alt="QR Code para Google Authenticator" />
+                    <p>Escaneie o QR Code com o seu aplicativo de autenticação.</p>
+                    <InputField
+                      type="text"
+                      value={token}
+                      onChange={(e) => setToken(e.target.value)}
+                      placeholder="Digite o código"
+                    />
+                    <SubmitButton onClick={verify2FA}>Verificar Código</SubmitButton>
+                  </div>
+                )}
+              </div>
+            )}
       </FormContainer>
     </PageContainer>
     </>

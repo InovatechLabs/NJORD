@@ -10,6 +10,8 @@ interface IUser extends Document {
     compararSenhas(senha: string): boolean;
     resetToken?: string;
     resetTokenExpires?: Date;
+    is2FAEnabled?: boolean;
+    twoFASecret?: string;
   }
 
   const UserSchema: Schema = new Schema(
@@ -40,6 +42,14 @@ interface IUser extends Document {
       resetTokenExpires: {
         type: String,
         required: false,
+      },
+      is2FAEnabled: {
+        type: Boolean,
+        default: false
+      },
+      twoFASecret: {
+        type: String,
+        default: null
       },
     },
     { timestamps: true }

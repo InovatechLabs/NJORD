@@ -6,6 +6,8 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { AuthenticatedRequest } from '../middlewares/verifyToken';
 import mongoose from 'mongoose';
+import speakeasy from 'speakeasy';
+import qrcode from 'qrcode';
 
 dotenv.config();
 
@@ -141,5 +143,74 @@ export const updateUserInfo = async (req: AuthenticatedRequest, res: Response) =
     return res.status(200).json(updatedUser);
   } catch (error) {
     return res.status(500).json({ message: 'Erro ao atualizar usuário', error });
+  }
+};
+
+export const enable2FA = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user ? req.user._id : '');
+
+    if(!req.user) {
+      return res.status(401).json({ message: 'Usuário não autenticado.'})
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+
+    const secret = speakeasy.generateSecret({ 
+    name: `Njord (${user.email})`, 
+    length: 20, 
+    issuer: 'Njord' 
+  });
+
+  if (!secret.otpauth_url) {
+    return res.status(500).json({ message: 'Erro ao gerar URL do QR Code' });
+  }
+
+    user.twoFASecret = secret.base32;
+    await user.save();
+    const qrCodeDataUrl = await qrcode.toDataURL(secret.otpauth_url);
+
+    return res.status(200).json({
+      qrCode: qrCodeDataUrl,
+      secret: secret.base32, 
+    });
+  } catch (err) {
+    return res.status(500).json({ message: 'Erro ao ativar 2FA', err });
+  }
+};
+
+export const verify2FA = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.user ? req.user._id : '');
+    const { token } = req.body;
+
+    if (!req.user) {
+      return res.status(401).json({ message: 'Usuário não autenticado.' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user || !user.twoFASecret) {
+      return res.status(400).json({ message: 'Usuário não configurou o 2FA.' });
+    }
+
+    console.log(user.twoFASecret)
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFASecret,
+      encoding: 'base32',
+      token,
+      window: 1, // tolerancia de tempo (pode aceitar o codigo anterior/proximo)
+    });
+
+    if (!verified) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+    user.is2FAEnabled = true;
+    await user.save();
+    return res.status(200).json({ message: '2FA verificado com sucesso!' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Erro ao verificar 2FA', err });
   }
 };
