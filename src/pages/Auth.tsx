@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Formik, Field, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext";
 import styled, { keyframes } from "styled-components";
 import TextDrop from "../components/auth/TextDrop";
 import Footer from '../components/home/footer/Footer';
+import TwoFactorCard from "../components/auth/TwoFactorCard";
 
 interface FormValues {
   email: string;
@@ -44,41 +45,59 @@ const Container = styled.div`
 
 `;
 
+const slideIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
 const Card = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   max-width: 600px;
-  height: 700px;
-  background-color: #273D67;
+  min-height: 700px;
+  background-color: #fff;
   border-radius: 5px;
   padding: 40px;
+  padding-top: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  animation: ${slideIn} 0.7s ease-out;
 `;
 
 const CardTitle = styled.h1`
-  font-family: 'Lavishly Yours', sans-serif;
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  margin: 5px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: #111;
+  text-align: center;
 `;
 
 const InputField = styled(Field)`
   width: 100%;
-  height: 55px;
-  border-radius: 10px;
-  background-color: #fff;
+  height: 50px;
+  background-color: transparent;
   outline: none;
   border: none;
+  border-bottom: 2px solid #000;
   box-sizing: border-box;
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-top: 10px;
   text-align: start;
   padding: 10px;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  color: #000;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+
   &::placeholder {
-    font-size: 22px;
+    font-size: 18px;
+    color: #999;
   }
 `;
 
@@ -89,34 +108,28 @@ const StyledForm = styled(Form)`
 `;
 
 const Label = styled.label`
-  color: #fff;
-  font-size: 1.8rem;
-  margin: 0;
+  color: #111;
+  font-size: 1.3rem;
+  margin-bottom: 5px;
   font-weight: 600;
 `;
 
-const BtnRegister = styled(Button) <{ children?: React.ReactNode }>`
+const BtnRegister = styled(Button)`
   width: 100%;
-  background-color: #0D1B2A;
-  height: 70px;
+  background-color: #111;
+  height: 60px;
   border: none;
-  outline: none;
-  border-radius: 20px;
+  border-radius: 12px;
   color: #fff;
   font-size: 1.2rem;
-  letter-spacing: 2px;
+  font-weight: 600;
   margin-top: 10px;
   cursor: pointer;
-  transition: .3s;
-  &:hover {
-    background-color: #07111b;
-  }
-`;
+  transition: background-color 0.3s ease;
 
-const P = styled.p`
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
+  &:hover {
+    background-color: #333;
+  }
 `;
 
 const FloatingError = styled.div`
@@ -132,7 +145,11 @@ const FloatingError = styled.div`
   font-size: 1.2rem;
   z-index: 999;
   animation: fadeIn 0.3s ease-in-out;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
   &::after {
     content: "";
     display: block;
@@ -144,6 +161,11 @@ const FloatingError = styled.div`
     width: 100%;
     animation: shrink 4s linear forwards;
     border-radius: 0 0 8px 8px;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
   }
 
   @keyframes fadeIn {
@@ -172,24 +194,20 @@ const HomeButton = styled.button`
   align-items: center;
   gap: 10px;
   background-color: transparent;
-  border: 2px solid #fff;
+  border: 2px solid #111;
   border-radius: 12px;
-  color: #fff;
+  color: #111;
   padding: 10px 20px;
   font-size: 1.2rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin: 20px;
   align-self: center;
 
   &:hover {
-    background-color: #fff;
-    color: #0D1B2A;
-  }
-
-  svg {
-    font-size: 1.5rem;
+    background-color: #111;
+    color: #fff;
   }
 `;
 
@@ -245,16 +263,6 @@ const FloatingSuccess = styled.div`
   }
 `;
 
-const slideIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -271,6 +279,7 @@ export const ModalOverlay = styled.div`
 
 export const ModalContent = styled.div`
   background-color: #273D67;
+  background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   width: 80%;
@@ -278,7 +287,7 @@ export const ModalContent = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   max-height: 80vh;
-  color: white;
+  color: #000;
   position: relative;
   animation: ${slideIn} 0.45s ease-out;
   display: flex;
@@ -289,11 +298,11 @@ export const ModalContent = styled.div`
 
 export const CloseModalButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: -10px;
+  right: 5px;
   background-color: transparent;
-  color: white;
-  font-size: 1.5rem;
+  color: #000;
+  font-size: 1.8rem;
   border: none;
   cursor: pointer;
 `;
@@ -333,6 +342,9 @@ const Auth: FC = () => {
   const { setAuthenticated } = useAuth();
   const [isLogin, setisLogin] = useState(true);
   const [modal, setModal] = useState(false);
+  const [tempToken, setTempToken] = useState<string>('');
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [token2FA, setToken2FA] = useState<string | null>(null);
 
   const handleRegisterClick = () => {
     setisLogin(false);
@@ -369,22 +381,38 @@ const Auth: FC = () => {
       const submit = await loginUser(values); // Função para enviar os dados de login
       console.log(submit.message);
       setSuccess(submit.message);
-      if (submit.message === 'Login bem-sucedido') {
-        if (submit.token) {
+      
+        if (submit.requires2FA && submit.tempToken) {
+          setTempToken(submit.tempToken);
+          setRequires2FA(true);
+          return;
+        } else if (submit.message === 'Login bem-sucedido') {
           setAuthenticated(true);
           navigate('/home');
+        } else if (submit.message === 'Código 2FA inválido.') {
+          setErrorMessage('Código 2FA inválido.')
+        } else {
+          setErrorMessage("E-mail ou senha incorretos. Tente novamente.")
         }
-      }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
       setErrorMessage("E-mail ou senha incorretos. Tente novamente.");
     } finally {
       setSubmitting(false);
+      setTimeout(() => {
+        setErrorMessage(''); 
+      }, 4000);
+      setTimeout(() => {
+        setSuccess(''); 
+      }, 4000);
     }
-    setTimeout(() => {
-      setErrorMessage("");
-    }, 4000);
-  };
+}
+
+  useEffect(() => {
+    if (tempToken) {
+      console.log("Temp Token atualizado:", tempToken);
+    }
+  }, [tempToken]);
 
   // A funçao handleRegisterSubmit é para enviar os dados de cadastro
 
@@ -429,6 +457,33 @@ const Auth: FC = () => {
       setSuccess("");
     }, 4000);
   };
+
+  const handleVerify2FACode = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/user/verify-login-code', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          tempToken: tempToken,
+          token2FA: token2FA
+        })
+      });
+      const result = await response.json()
+      if(result.message === 'Login bem-sucedido') {
+        setAuthenticated(true);
+        navigate('/home');
+      } else {
+        setErrorMessage('Código 2FA inválido');
+      }
+    } catch (error) {
+      console.error("Erro ao enviar token para backend:", error)
+    } setTimeout(() => {
+      setErrorMessage("");
+    }, 4000);
+  }
 
   const passwordStrength = (senha: string) => {
     
@@ -483,7 +538,6 @@ const Auth: FC = () => {
 
   }
 
-
   const buttonText = isLogin ? "Entrar" : "Cadastrar";
 
   // Formik configurado para tratar login e cadastro dinamicamente
@@ -491,12 +545,22 @@ const Auth: FC = () => {
     <>
     <Container>
       <Card>
-        {errorMessage && <FloatingError>{errorMessage}</FloatingError>}
+      {requires2FA && (
+      <div>
+        <TwoFactorCard onCodeChange={setToken2FA} 
+        onSubmit={handleVerify2FACode}
+        showSubmitButton
+        />
+      </div>
+    )}
+         {!requires2FA && (
+            <>
+        {errorMessage && <FloatingError><img src="https://www.balipost.com/wp-content/uploads/2017/04/close-icon-white.png" />{errorMessage}</FloatingError>}
         {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0' }} alt="success"/>{success}</FloatingSuccess>}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
             src="https://icons.veryicon.com/png/o/internet--web/55-common-web-icons/person-4.png"
-            style={{ width: '100px', height: '100px' }}
+            style={{ width: '80px', height: '80px' }}
             alt=""
           />
           {isLogin ? <CardTitle>Login</CardTitle> : <CardTitle>Cadastro</CardTitle>}
@@ -530,24 +594,26 @@ const Auth: FC = () => {
                 <InputField type="password" name="senha" placeholder="Preencha sua senha" />
               </Form.Group>
               
-              {!isLogin && (
-                
-                <PasswordContainer>
-                  <PasswordBar style={{width: `${passwordStrength(values.senha).value}%`, backgroundColor: `${passwordStrength(values.senha).color}`}}/>
-                  {passwordStrength(values.senha).value > 0 && (
-                     <div style={{ color: 'white', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>Força da senha:
-                     <p style={{ marginLeft: '5px' }}>{passwordStrength(values.senha).label}</p>
-                     </div>
-                  )}
-                 
-                </PasswordContainer>
-              )}
+              {!isLogin && values.senha && (
+  <PasswordContainer>
+    <PasswordBar
+      style={{
+        width: `${passwordStrength(values.senha).value}%`,
+        backgroundColor: `${passwordStrength(values.senha).color}`
+      }}
+    />
+    <div style={{ color: 'black', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+      Força da senha:
+      <p style={{ marginLeft: '5px' }}>{passwordStrength(values.senha).label}</p>
+    </div>
+  </PasswordContainer>
+)}
 
               {isLogin ? (
                 <p
                   style={{
                     textAlign: 'center',
-                    color: '#fff',
+                    color: '#000',
                     margin: '0',
                     fontSize: '1.4rem',
                     fontWeight: '200',
@@ -561,7 +627,7 @@ const Auth: FC = () => {
                 <p
                   style={{
                     textAlign: 'center',
-                    color: '#fff',
+                    color: '#000',
                     margin: '10px',
                     fontSize: '1.4rem',
                     fontWeight: '200',
@@ -572,15 +638,11 @@ const Auth: FC = () => {
                   Já possui uma conta? Faça login!
                 </p>
               )}
-
-              <BtnRegister variant="primary" type="submit" disabled={passwordStrength(values.senha).value < 60 || passwordStrength(values.senha).passwordLengthMatch === false}>
-                {buttonText}
-              </BtnRegister>
-
-              {!isLogin ? (
-                <p></p>
-              ) : (
-                <p style={{ textAlign: 'center', alignSelf: 'center', alignItems: 'center', color: '#fff', margin: '0', fontSize: '1.4rem', fontWeight: '600' }}>Ainda não possui uma conta? <P onClick={handleRegisterClick}>Cadastre-se!</P></p>
+              <BtnRegister variant="primary" type="submit"  disabled={
+    !values.senha || passwordStrength(values.senha).value < 60 || !passwordStrength(values.senha).passwordLengthMatch
+  }>{buttonText}</BtnRegister>
+              {isLogin && (
+                 <p style={{ textAlign: 'center', alignSelf: 'center', alignItems: 'center', color: '#000', margin: '0', fontSize: '1.4rem', fontWeight: '600' }}>Ainda não possui uma conta? <br /><span style={{ color: '#3bb1ff', cursor: 'pointer' }} onClick={handleRegisterClick}>Cadastre-se!</span></p>
               )}
             </StyledForm>
           )}
@@ -610,6 +672,8 @@ const Auth: FC = () => {
             </ModalContent>
           </ModalOverlay>
         )}
+      </>
+    )}
       </Card>
       <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <TextDrop>Uma iniciativa com impacto tecnológico, social e ambiental.<br /><br />

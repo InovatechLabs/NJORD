@@ -39,5 +39,6 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["server/**/*.ts"] 
+  "include": ["server/**/*.ts", "src/pages/Dashboard.tsx", "src/components/**/*.tsx"],
+  "exclude": ["src/pages/Auth.tsx"]
 }

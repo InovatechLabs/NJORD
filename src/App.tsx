@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
 import { AuthProvider } from './contexts/AuthContext';
@@ -10,8 +10,10 @@ import RecoverPassword from './pages/RecoverPassword';
 import CsvManagerPage from './pages/CsvManager';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import TwoFactorCard from './components/auth/TwoFactorCard';
 
 function App() {
+    const [teste, setTeste] = useState('')
     return (
     <AuthProvider>
     <Router>

@@ -45,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
     
-    const { email, senha } = req.body;
+    const { email, senha, token2FA } = req.body;
 
     try {
         if(!email || !senha) {
@@ -60,6 +60,37 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         const senhaValida = await usuarioExiste.compararSenhas(senha);
         if(!senhaValida) {
             return res.status(400).json({ message: 'Senha incorreta.' })
+        }
+
+        if(usuarioExiste.is2FAEnabled) {
+          if(!token2FA) {
+            const tempToken = jwt.sign(
+              { _id: usuarioExiste._id },
+              process.env.JWT_TEMP_SECRET!, // chave temporaria separada
+              { expiresIn: '10m' }
+            );
+      
+            return res.status(206).json({
+              message: 'Código 2FA necessário.',
+              requires2FA: true,
+              tempToken,
+            });
+          }
+
+          if (!usuarioExiste.twoFASecret) {
+            return res.status(400).json({ message: '2FA não configurado corretamente.' });
+          }
+
+          const validToken = speakeasy.totp.verify({
+            secret: usuarioExiste.twoFASecret,
+            encoding: 'base32',
+            token: token2FA,
+            window: 1,
+          });
+
+          if(!validToken) {
+            return res.status(401).json({ message: 'Código 2FA inválido.' });
+          }
         }
 
         const token = jwt.sign({ _id: usuarioExiste._id, role: usuarioExiste.role}, process.env.JWT_SECRET!, { expiresIn: '1h'});
@@ -98,7 +129,7 @@ export const getUserInfo = async (req: AuthenticatedRequest, res: Response) => {
     }
 
     const userId = new mongoose.Types.ObjectId(req.user._id); 
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select('-twoFASecret');
 
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
@@ -214,3 +245,50 @@ export const verify2FA = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(500).json({ message: 'Erro ao verificar 2FA', err });
   }
 };
+
+export const verifyLoginCode = async (req: AuthenticatedRequest, res: Response) => {
+  const { token2FA, tempToken } = req.body;
+
+  try {
+
+    console.log("Token 2FA recebido:", token2FA);
+    console.log("Temp token recebido:", tempToken);
+    const decodedTempToken = jwt.verify(tempToken, process.env.JWT_TEMP_SECRET!) as { _id: string };
+
+    if (!decodedTempToken) {
+      return res.status(401).json({ message: 'Token temporário inválido ou expirado.' });
+    }
+
+    const userId = decodedTempToken._id;
+    const user = await User.findById(userId);
+    console.log("Usuário encontrado:", user);
+    if (!user || !user.twoFASecret) {
+      return res.status(400).json({ message: 'Usuário não configurou o 2FA.' });
+    }
+
+    const validToken = speakeasy.totp.verify({
+      secret: user.twoFASecret,
+      encoding: 'base32',
+      token: token2FA,
+      window: 1,
+    });
+
+    if (!validToken) {
+      return res.status(401).json({ message: 'Código 2FA inválido.' });
+    }
+    const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+
+   
+    res.cookie('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 3600000, 
+    });
+
+    return res.status(200).json({ message: 'Login bem-sucedido', token });
+  } catch (err) {
+    console.error("Erro ao verificar código 2FA:", err);
+    return res.status(500).json({ message: 'Erro ao verificar 2FA', err });
+  }
+}

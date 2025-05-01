@@ -168,6 +168,7 @@ interface UserInfo {
   nome: string;
   email: string;
   senha: string;
+  is2FAEnabled: boolean;
 }
 
 const Settings: React.FC = () => {
@@ -194,8 +195,10 @@ const Settings: React.FC = () => {
                 credentials: "include"
               });
             const data = await response.json();
+            if(data.is2FAEnabled == true) {
+              setIs2FAEnabled(true);
+            }
             setUserInfo(data);
-            console.log(data);
         } catch (error) {
             console.error('Não foi possivel resgatar dados do usuario:', error);
         }
@@ -323,13 +326,13 @@ const Settings: React.FC = () => {
         ) : (
           <p>Carregando...</p>
         )}
-        {!is2FAEnabled && (
+        {!is2FAEnabled ? (
               <div className="twofa-container" style={{ marginTop: '30px'}}>
+                <h5>Status 2FA: ❌Desativado</h5>
                 <h2>Ativar 2FA</h2>
                 <p>Para aumentar a segurança da sua conta, ative a autenticação em dois fatores.</p>
                 <SubmitButton onClick={enable2FA}>Ativar 2FA</SubmitButton>
 
-                {/* Se o QR Code foi gerado, exibe o QR Code e campo de verificação */}
                 {qrCodeDataUrl && (
                   <div className="qr-code-container">
                     <img src={qrCodeDataUrl} alt="QR Code para Google Authenticator" />
@@ -344,6 +347,8 @@ const Settings: React.FC = () => {
                   </div>
                 )}
               </div>
+            ) : (
+              <div>Status 2FA: ✔️Ativo</div>
             )}
       </FormContainer>
     </PageContainer>

@@ -10,7 +10,9 @@ interface User {
 
 interface ApiResponse {
   message: string;
-  token: string;
+  token?: string;
+  requires2FA?: boolean;
+  tempToken?: string;
   user: {
     _id: string;   
     nome: string;
