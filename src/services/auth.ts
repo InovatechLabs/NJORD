@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "http://localhost:3000/api/";
+const apiUrl = `${process.env.REACT_APP_BACKEND_URL}/api/`;
 
 interface User {
   nome: string;

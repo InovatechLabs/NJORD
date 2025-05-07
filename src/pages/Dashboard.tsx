@@ -44,7 +44,7 @@ export default function Dashboard() {
     try {
 
       console.log("Datas enviadas:", formattedStart, formattedEnd);
-      const res = await axios.get("http://localhost:3000/api/csv/dashboard", {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/csv/dashboard`, {
         params: {
           start: formattedStart,
           end: formattedEnd,

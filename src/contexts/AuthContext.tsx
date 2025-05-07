@@ -18,7 +18,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/user/verify", {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/verify`, {
           method: "GET",
           credentials: "include",
         });
@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const checkHierarchy = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/admin', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/admin`, {
         method: 'GET',
         credentials: 'include'
       });
@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Função para logout: remove o cookie e redefine o estado
   const logout = async () => {
     try {
-      await fetch("http://localhost:3000/api/user/logout", { 
+      await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/logout`, { 
         method: "POST",
         credentials: "include" 
       });

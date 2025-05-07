@@ -44,7 +44,7 @@ export default function CsvManager() {
 
   const handleSubmitToServer = async () => {
     try {
-      await axios.post("http://localhost:3000/api/csv/upload", csvData);
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/csv/upload`, csvData);
       alert("Dados enviados com sucesso!");
     } catch (error) {
       alert("Erro ao enviar dados: " + error);

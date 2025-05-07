@@ -72,7 +72,7 @@ const DatabasePanel: React.FC = () => {
   useEffect(() => {
     const getDocumentCount = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/admin/countdata', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/countdata`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

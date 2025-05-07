@@ -52,7 +52,7 @@ function formatDate(dataISO: string): string {
 
   const getRegisteredUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3000/listar');
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/listar`);
       if (!response.ok) {
         throw new Error("Erro ao buscar usuários");
       }
@@ -73,7 +73,7 @@ function formatDate(dataISO: string): string {
 
   const deleteUser = async (id: any) => {
     try {
-      const response = await fetch('http://localhost:3000/api/admin/deleteuser', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/deleteuser`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ function formatDate(dataISO: string): string {
 
   const updateUser = async (id: any, nome?: any, email?:any, role?: any ) => {
     try {
-      const response = await fetch('http://localhost:3000/api/admin/updateuser', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/admin/updateuser`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

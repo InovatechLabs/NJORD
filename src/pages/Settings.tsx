@@ -190,7 +190,7 @@ const Settings: React.FC = () => {
   useEffect(() => {
     const getUserData = async () => {
         try {
-            const response = await fetch("http://localhost:3000/api/user/info", {
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/info`, {
                 method: "GET",
                 credentials: "include"
               });
@@ -214,7 +214,7 @@ const Settings: React.FC = () => {
         } else {
             setError(null)
         }
-        const response = await fetch('http://localhost:3000/api/user/update', {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/update`, {
             method: 'PUT', 
             credentials: 'include',
             headers: {
@@ -249,7 +249,7 @@ const Settings: React.FC = () => {
 
   const enable2FA = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/enable-2fa', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/enable-2fa`, {
       method: 'POST',
       credentials: 'include',
       });
@@ -262,7 +262,7 @@ const Settings: React.FC = () => {
   
   const verify2FA = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/verify-2fa', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/verify-2fa`, {
         method: 'POST',
         credentials: 'include',
         headers: {

@@ -1,11 +1,12 @@
 import dotenv from 'dotenv';
+dotenv.config();
 import mongoose from 'mongoose';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import express, { Request, Response } from 'express';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
-
+import { pool } from './databases/mysql/mysql';
 // Rotas
 import userRouter from './routes/userRoutes';
 import recoverRouter from './routes/recoverPasswordRouter';
@@ -15,13 +16,11 @@ import adminRouter from './routes/admin/adminManagementRoutes';
 // Modelos
 import User from './models/user';
 
-dotenv.config();
-
 const app = express();
 
 // ===================== MIDDLEWARES =====================
 app.use(cors({
-  origin: 'http://localhost:3030', // Frontend
+  origin: process.env.REACT_APP_FRONTEND_URL, // Frontend
   credentials: true
 }));
 
@@ -54,23 +53,34 @@ app.use((req: Request, res: Response): Response => {
   });
 });
 
-// ===================== CONEXÃO COM BANCO =====================
-const PORT = 3000;
-const MONGODB_URL = process.env.MONGODB_URL;
+// ===================== CONEXÕES =====================
 
-if (!MONGODB_URL) {
-  throw new Error('A variável de ambiente MONGODB_URL não está definida.');
+async function startServer() {
+  
+  const PORT = 3000;
+  const MONGODB_URL = process.env.MONGODB_URL;
+
+  if (!MONGODB_URL) throw new Error('A variável MONGODB_URL não está definida.');
+  if (!pool) throw new Error('Pool do MySQL não está configurado.');
+
+  try {
+    // Testa conexão com MySQL
+    await pool.query('SELECT 1');
+    console.log(chalk.green('✅ Conectado ao MySQL com sucesso'));
+
+    // Conecta ao MongoDB
+    await mongoose.connect(MONGODB_URL);
+    console.log(chalk.green('✅ Conectado ao MongoDB com sucesso'));
+
+    // Inicia servidor
+    app.listen(PORT, () => {
+      console.log(chalk.blue(`🚀 Servidor rodando em http://localhost:${PORT}`));
+    });
+
+  } catch (error) {
+    console.error(chalk.red('❌ Erro ao iniciar servidor:'), error);
+    process.exit(1); // Encerra o processo em caso de erro crítico
+  }
 }
 
-mongoose.connect(MONGODB_URL)
-  .then(() => {
-    console.log(chalk.green('✅ MongoDB conectado com sucesso'));
-
-    // Só inicia o servidor se o Mongo estiver conectado
-    app.listen(PORT, () => {
-      console.log(chalk.blue(`🚀 Servidor rodando na porta ${PORT}`));
-    });
-  })
-  .catch((err) => {
-    console.error(chalk.red('❌ Erro ao conectar com o MongoDB:', err));
-  });
+startServer();

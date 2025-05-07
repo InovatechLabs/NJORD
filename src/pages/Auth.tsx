@@ -460,7 +460,7 @@ const Auth: FC = () => {
 
   const handleVerify2FACode = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/user/verify-login-code', {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/verify-login-code`, {
         method: 'POST',
         credentials: 'include',
         headers: {

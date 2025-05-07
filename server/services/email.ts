@@ -10,7 +10,7 @@ const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 export const sendRecoveryEmail = async (email: string, token: string) => {
   try {
-    const resetUrl = `http://localhost:3030/recover/${token}`; 
+    const resetUrl = `${process.env.REACT_APP_FRONTEND_URL}/recover/${token}`; 
 
     const sendSmtpEmail = {
       to: [{ email }], // aqui vai o e-mail do usuário dinamicamente
