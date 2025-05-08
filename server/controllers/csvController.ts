@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import CsvData from '../models/csvData';
+import { pool } from '../databases/mysql/mysql';
 
 export const uploadCsvData = async (req: Request, res: Response) => {
   try {
@@ -41,15 +42,15 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
   const endStr = endDate.toISOString().slice(0, 10);
   
   try {
-    const data = await CsvData.find({
-      Date: { $gte: startStr, $lte: endStr }
-    }).lean();
+    const [data] = await pool.query('SELECT *, DATE(reading_time) AS Date FROM `Sensor` WHERE DATE(reading_time) BETWEEN ? AND ?',
+      [startStr, endStr]
+    )
 
     // Se for por dia, agrupar e calcular médias
     if (groupByHour === "false") {
       const agrupado: Record<string, any[]> = {};
 
-      data.forEach((item: any) => {
+      (data as any[]).forEach((item: any) => {
         if (!agrupado[item.Date]) agrupado[item.Date] = [];
         agrupado[item.Date].push(item);
       });
@@ -59,12 +60,14 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
           registros.reduce((acc: number, curr: any) => acc + parseFloat(curr[campo] || 0), 0);
         const media = (campo: string) => soma(campo) / registros.length;
 
+        const date = new Date(data)
+        const finalDate = date.toISOString().slice(0, 10);
         return {
-          Date: data,
-          Temp_C: media("Temp_C"),
-          Hum_: media("Hum_%"),
-          SR_Wm2: Math.max(...registros.map((r: any) => parseFloat(r["SR_Wm2"] || 0))),
-          WindSpeed_Inst: Math.max(...registros.map((r: any) => parseFloat(r["WindSpeed_Inst"] || 0)))
+          Date: finalDate,
+          Temp_C: media("temp"),
+          Hum_: media("hum"),
+          SR_Wm2: Math.max(...registros.map((r: any) => parseFloat(r["uv_level"] || 0))),
+          WindSpeed_Inst: Math.max(...registros.map((r: any) => parseFloat(r["wind_rt"] || 0)))
         };
       });
 

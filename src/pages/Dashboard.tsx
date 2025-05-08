@@ -23,15 +23,15 @@ import styled from "styled-components";
 interface CsvData {
   Date: string;
   Time: string;
-  Temp_C: number;
-  "Hum_%": number;
-  SR_Wm2: number
-  WindSpeed_Inst: number;
-  Press_Bar: number;
-  WindPeak_ms: number;
-  WindSpeed_Avg: number;
-  WindDir_Inst: number;
-  WindDir_Avg: number;
+  temp: number;
+  hum: number;
+  uv_level: number
+  wind_rt: number;
+  bar: number;
+  wind_peak: number;
+  wind_avg: number;
+  wind_dir_rt: number;
+  wind_dir_avg: number;
 }
 
 export default function Dashboard() {
@@ -53,14 +53,29 @@ export default function Dashboard() {
       });
       const cleanedData = res.data.map((entry: any) => {
         const cleanedEntry: any = {};
+      
         Object.keys(entry).forEach((key) => {
-          const trimmedKey = key.trim(); // remove espaços no início e fim, devido aos dados do vento estarem com um espaço no final do nome
-          cleanedEntry[trimmedKey] = entry[key];
+          const trimmedKey = key.trim();
+          let value = entry[key];
+          if (!isNaN(Number(value))) {
+            value = Number(value);
+          }
+      
+          cleanedEntry[trimmedKey] = value;
+        });  
+        const dateObj = new Date(entry.reading_time);
+      
+        cleanedEntry.Date = dateObj.toLocaleDateString('pt-BR'); 
+        cleanedEntry.Time = dateObj.toLocaleTimeString('pt-BR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'America/Sao_Paulo'
         });
         return cleanedEntry;
       });
-
       setData(cleanedData);
+      console.log(cleanedData);
     } catch (err) {
       alert("Erro ao buscar dados do dashboard");
     }
@@ -104,7 +119,7 @@ export default function Dashboard() {
         <img src={tempSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col ">
           <strong>Temp. Máx:</strong>
-          <span>{calcularMax("Temp_C")} °C</span>
+          <span>{calcularMax("temp")} °C</span>
         </div>
       </div>
 
@@ -113,7 +128,7 @@ export default function Dashboard() {
         <img src={tempSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col ">
           <strong>Temp. Média:</strong>
-          <span>{calcularMedia("Temp_C")} °C</span>
+          <span>{calcularMedia("temp")} °C</span>
         </div>
       </div>
 
@@ -122,7 +137,7 @@ export default function Dashboard() {
         <img src={umiditySvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
           <strong>Umidade Média:</strong>
-          <span>{calcularMedia("Hum_%")} %</span>
+          <span>{calcularMedia("hum")} %</span>
         </div>
       </div>
 
@@ -130,7 +145,7 @@ export default function Dashboard() {
         <img src={umiditySvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
           <strong>Umidade Máxima:</strong>
-          <span>{calcularMax("Hum_%")} %</span>
+          <span>{calcularMax("hum")} %</span>
         </div>
       </div>
 
@@ -139,7 +154,7 @@ export default function Dashboard() {
         <img src={uvSvg} alt="" className="w-12 h-12" />
         <div className="flex flex-col">
           <strong>Radiação Máx:</strong>
-          <span>{calcularMax("SR_Wm2")} W/m²</span>
+          <span>{calcularMax("uv_level")} W/m²</span>
         </div>
       </div>
 
@@ -147,7 +162,7 @@ export default function Dashboard() {
         <img src={uvSvg} alt="" className="w-12 h-12" />
         <div className="flex flex-col">
           <strong>Radiação Média:</strong>
-          <span>{calcularMedia("SR_Wm2")} W/m²</span>
+          <span>{calcularMedia("uv_level")} W/m²</span>
         </div>
       </div>
 
@@ -156,7 +171,7 @@ export default function Dashboard() {
         <img src={windSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
           <strong>Vento Máx:</strong>
-          <span>{calcularMax("WindSpeed_Inst")} m/s</span>
+          <span>{calcularMax("wind_rt")} m/s</span>
         </div>
       </div>
     </aside>
@@ -195,12 +210,12 @@ export default function Dashboard() {
       <h3>Gráfico de Temperatura e Umidade</h3>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data}>
-          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
-          <YAxis />
-          <Tooltip />
+          <XAxis dataKey="Time" />
+          <YAxis domain={[0, 100]} interval={0} minTickGap={10} textAnchor="end" height={70}/>
+          <Tooltip labelStyle={{color: "black"}}/>
           <Legend />
-          <Area type="monotone" dataKey="Hum_%" fill="#4FC3F7" stroke="#4FC3F7" />
-          <Area type="monotone" dataKey="Temp_C" fill="#FF6B6B" stroke="#FF6B6B" />
+          <Area type="monotone" dataKey="hum" fill="#4FC3F7" stroke="#4FC3F7" name="Humidade (%)"/>
+          <Area type="monotone" dataKey="temp" fill="#FF6B6B" stroke="#FF6B6B" name="Temperatura (°C)"/>
           <CartesianGrid opacity={0.2} vertical={false} />
         </AreaChart>
       </ResponsiveContainer>
@@ -210,10 +225,10 @@ export default function Dashboard() {
         <AreaChart data={data}>
           <XAxis dataKey={groupByHour ? "Time" : "Date"} />
           <YAxis domain={[0, 400]} />
-          <Tooltip />
+          <Tooltip labelStyle={{color: "black"}}/>
           <Legend />
-          <Area type="monotone" dataKey="WindDir_Avg" fill="#36ff2f" stroke="#36ff2f" name="Direção média do Vento (°)" />
-          <Area type="monotone" dataKey="WindSpeed_Inst" fill="#00bcd4" stroke="#00bcd4" name="Velocidade Inst. do Vento (m/s)" />
+          <Area type="monotone" dataKey="wind_dir_avg" fill="#36ff2f" stroke="#36ff2f" name="Direção média do Vento (°)" />
+          <Area type="monotone" dataKey="wind_rt" fill="#00bcd4" stroke="#00bcd4" name="Velocidade Inst. do Vento (m/s)" />
         </AreaChart>
       </ResponsiveContainer>
 
@@ -222,10 +237,10 @@ export default function Dashboard() {
         <AreaChart data={data}>
           <XAxis dataKey={groupByHour ? "Time" : "Date"} />
           <YAxis domain={[0, 1100]} />
-          <Tooltip />
+          <Tooltip labelStyle={{color: "black"}}/>
           <Legend />
-          <Area type="monotone" dataKey="Press_Bar" fill="#ff4a77" stroke="#ff4a77" name="Pressão atmosférica" />
-          <Area type="monotone" dataKey="SR_Wm2" fill="#fbff16" stroke="#fbff16" name="Radiação solar (W/m²)" />
+          <Area type="monotone" dataKey="bar" fill="#ff4a77" stroke="#ff4a77" name="Pressão atmosférica" />
+          <Area type="monotone" dataKey="uv_level" fill="#fbff16" stroke="#fbff16" name="Radiação solar (W/m²)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
@@ -239,13 +254,6 @@ const Title = styled.h1`
         font-weight: 700;
         margin-bottom: 20px;
         color: #fff;
-`;
-
-const Image = styled.img`
-   position: absolute;
-    width: 100%; 
-    height: auto;
-    z-index: 1; 
 `;
 
 export const DatePickerWrapper = styled.div`
