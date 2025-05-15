@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import GlobalStyles from "../components/globalstyles/GlobalStyles";
 import { CustomDateInput } from "../components/dashboard/CustomDateInput";
+import { StyledAside } from "../components/dashboard/StyledAside";
 import DashBoardPresentation from "../components/dashboard/DashboardPresentation";
 import image from '../images/path.png';
 import umiditySvg from '../../src/images/image 14.png';
@@ -19,6 +20,7 @@ import {
   CartesianGrid
 } from "recharts";
 import styled from "styled-components";
+import CollapseChart from "../components/dashboard/CollapseChart";
 
 interface CsvData {
   Date: string;
@@ -39,6 +41,7 @@ export default function Dashboard() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [groupByHour, setGroupByHour] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -111,8 +114,29 @@ export default function Dashboard() {
   
   <div className="flex min-h-screen bg-[#1c142f]">
     {/* Menu lateral */}
-    <aside className="w-64 p-4 flex flex-col space-y-4 sticky top-0 self-start bg-[#271b41]">
-      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center ">Sumário</h1>
+    {data.length > 0 && (
+      <>
+      <div style={{ position: 'relative' }}>
+        <button
+        onClick={() => setCollapsed((prev) => !prev)}
+        style={{
+          position: 'absolute',
+          left: collapsed ? '0' : '16rem',
+          zIndex: 10,
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          padding: '0.5rem 0.5rem',
+          borderRadius: '0 6px 6px 0',
+          transition: 'left 0.4s ease',
+          cursor: 'pointer',
+        }}
+      >
+        {collapsed ? '➡️' : '⬅️'}
+      </button>
+      </div>
+       <StyledAside isCollapsed={collapsed}>
+      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center">Sumário</h1>
 
 
       <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
@@ -174,7 +198,11 @@ export default function Dashboard() {
           <span>{calcularMax("wind_rt")} m/s</span>
         </div>
       </div>
-    </aside>
+     </StyledAside>
+
+     </>
+    )}
+    
 
     {/* Conteúdo principal */}
     <div className="flex-1 p-6 flex flex-col items-center text-white">
@@ -208,22 +236,22 @@ export default function Dashboard() {
       </div>
 
       <h3>Gráfico de Temperatura e Umidade</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data}>
-          <XAxis dataKey="Time" />
-          <YAxis domain={[0, 100]} interval={0} minTickGap={10} textAnchor="end" height={70}/>
-          <Tooltip labelStyle={{color: "black"}}/>
-          <Legend />
-          <Area type="monotone" dataKey="hum" fill="#4FC3F7" stroke="#4FC3F7" name="Humidade (%)"/>
-          <Area type="monotone" dataKey="temp" fill="#FF6B6B" stroke="#FF6B6B" name="Temperatura (°C)"/>
-          <CartesianGrid opacity={0.2} vertical={false} />
-        </AreaChart>
-      </ResponsiveContainer>
+      <CollapseChart 
+      title="Gráfico de Temperatura e Umidade"
+      data={data}
+      yDomain={[0, 100]}
+       areas={[
+    { dataKey: "hum", stroke: "#4FC3F7", name: "Humidade (%)", fill: "#4FC3F7" },
+    { dataKey: "temp", stroke: "#FF6B6B", name: "Temperatura (°C)", fill: "#FF6B6B" },
+  ]}
+ 
+      />
+      
 
       <h3>Gráfico de Radiação Solar e Vento</h3>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data}>
-          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+          <XAxis dataKey={(data) => `${data.Date} ${data.Time}`} />
           <YAxis domain={[0, 400]} />
           <Tooltip labelStyle={{color: "black"}}/>
           <Legend />
@@ -235,7 +263,7 @@ export default function Dashboard() {
       <h3>Gráfico de Direção Média & Instantânea do Vento</h3>
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart data={data}>
-          <XAxis dataKey={groupByHour ? "Time" : "Date"} />
+          <XAxis dataKey={(data) => `${data.Date} ${data.Time}`} />
           <YAxis domain={[0, 1100]} />
           <Tooltip labelStyle={{color: "black"}}/>
           <Legend />
