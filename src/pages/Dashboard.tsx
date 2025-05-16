@@ -7,20 +7,15 @@ import GlobalStyles from "../components/globalstyles/GlobalStyles";
 import { CustomDateInput } from "../components/dashboard/CustomDateInput";
 import { StyledAside } from "../components/dashboard/StyledAside";
 import DashBoardPresentation from "../components/dashboard/DashboardPresentation";
-import image from '../images/path.png';
 import umiditySvg from '../../src/images/image 14.png';
 import uvSvg from '../../src/images/image 15.png';
 import windSvg from '../../src/images/image 16.png';
 import tempSvg from '../../src/images/Layer_1.png';
-
-import {
-  XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,
-  AreaChart,
-  Area,
-  CartesianGrid
-} from "recharts";
+import wind_dir from '../../src/images/wind_dir.png';
+import download from '../../src/images/download_icon.png';
 import styled from "styled-components";
 import CollapseChart from "../components/dashboard/CollapseChart";
+import Papa from 'papaparse';
 
 interface CsvData {
   Date: string;
@@ -42,6 +37,19 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [groupByHour, setGroupByHour] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+
+  const today = new Date();
+
+  const handleExport = () => {
+      const csv = Papa.unparse(data);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", "dados_filtrados.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
 
   const fetchData = async () => {
     try {
@@ -106,13 +114,18 @@ export default function Dashboard() {
     return Math.max(...data.map((d) => Number(d[campo])));
   };
 
+  const calcularMin = (campo: keyof CsvData): number => {
+    if(data.length === 0) return 0;
+    return Math.min(...data.map((d) => Number(d[campo])));
+  }
+
   return (
     <>
   <GlobalStyles />
   <Nav />
   <DashBoardPresentation />
   
-  <div className="flex min-h-screen bg-[#1c142f]">
+  <div className="flex min-h-screen bg-[#0D1B2A]">
     {/* Menu lateral */}
     {data.length > 0 && (
       <>
@@ -136,68 +149,77 @@ export default function Dashboard() {
       </button>
       </div>
        <StyledAside isCollapsed={collapsed}>
-      <h1 className="text-xl font-bold mb-6 text-white p-2 text-center">Sumário</h1>
+      <h1 className="text-xl font-bold mb-4 text-white p-1 text-center">Sumário</h1>
 
 
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
         <img src={tempSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col ">
-          <strong>Temp. Máx:</strong>
-          <span>{calcularMax("temp")} °C</span>
+          <strong>Temperatura</strong>
+          <span>Máxima: <strong>{calcularMax("temp")} °C</strong></span>
+          <span>Média: <strong>{calcularMedia("temp")} °C</strong></span>
+          <span>Mínima: <strong>{calcularMin("temp")} °C</strong></span>
         </div>
       </div>
 
-      {/* Temperatura Média */}
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
-        <img src={tempSvg} alt="" className="w-10 h-10" />
-        <div className="flex flex-col ">
-          <strong>Temp. Média:</strong>
-          <span>{calcularMedia("temp")} °C</span>
-        </div>
-      </div>
+      
 
-      {/* Umidade Média */}
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+      {/* Umidade */}
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
         <img src={umiditySvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
-          <strong>Umidade Média:</strong>
-          <span>{calcularMedia("hum")} %</span>
+          <strong>Umidade</strong>
+          <span>Máxima: <strong>{calcularMax("hum")} %</strong> </span> 
+          <span>Média: <strong>{calcularMedia("hum")} %</strong> </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
-        <img src={umiditySvg} alt="" className="w-10 h-10" />
+      {/* Radiação */}
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={uvSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
-          <strong>Umidade Máxima:</strong>
-          <span>{calcularMax("hum")} %</span>
+          <strong>Radiação UV</strong>
+          <span>Máxima: <strong>{calcularMax("uv_level")} W/m²</strong></span>
+          <span>Média: <strong>{calcularMedia("uv_level")} W/m²</strong></span>
         </div>
       </div>
 
-      {/* Radiação Máxima */}
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
-        <img src={uvSvg} alt="" className="w-12 h-12" />
-        <div className="flex flex-col">
-          <strong>Radiação Máx:</strong>
-          <span>{calcularMax("uv_level")} W/m²</span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
-        <img src={uvSvg} alt="" className="w-12 h-12" />
-        <div className="flex flex-col">
-          <strong>Radiação Média:</strong>
-          <span>{calcularMedia("uv_level")} W/m²</span>
-        </div>
-      </div>
-
-      {/* Vento Máximo */}
-      <div className="flex items-center gap-3 text-white px-4 py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+      {/* Vento */}
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
         <img src={windSvg} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
-          <strong>Vento Máx:</strong>
-          <span>{calcularMax("wind_rt")} m/s</span>
+          <strong>Vento:</strong>
+          <span>Máxima: <strong>{calcularMax("wind_rt")} m/s</strong></span>
+          <span>Média: <strong>{calcularMedia("wind_rt")} m/s</strong></span>
         </div>
       </div>
+
+      {/* Direção do Vento */}
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={wind_dir} alt="" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <strong>Direção do vento:</strong>
+          <span>Máxima: <strong>{calcularMax("wind_dir_rt")} m/s</strong></span>
+          <span>Média: <strong>{calcularMedia("wind_dir_rt")} m/s</strong></span>
+          <span>Mínima: <strong>{calcularMin("wind_dir_rt")} m/s</strong></span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
+        <img src={wind_dir} alt="" className="w-10 h-10" />
+        <div className="flex flex-col">
+          <strong>Pico de intensidade</strong>
+          <span>Máxima: <strong>{calcularMax("wind_peak")} m/s</strong></span>
+          <span>Média: <strong>{calcularMedia("wind_peak")} m/s</strong></span>
+          <span>Mínima: <strong>{calcularMin("wind_peak")} m/s</strong></span>
+        </div>
+      </div>
+
+      <button 
+      className="flex flex-row-reverse items-center justify-end gap-2 px-2 py-6 mt-2 text-white bg-[transparent] hover:bg-[#4d9dff] rounded-md transition-colors duration-200"
+      onClick={handleExport}>Download dados
+      <img src={download} alt="Icon" className="w-10 h-10" />
+      </button>
      </StyledAside>
 
      </>
@@ -219,6 +241,7 @@ export default function Dashboard() {
             endDate={endDate}
             dateFormat="yyyy-MM-dd"
             customInput={<CustomDateInput />}
+            maxDate={today}
           />
 
           <label style={{ color: '#fff' }}>Data Fim:</label>
@@ -230,47 +253,61 @@ export default function Dashboard() {
             endDate={endDate}
             dateFormat="yyyy-MM-dd"
             customInput={<CustomDateInput />}
+            maxDate={today}
           />
           <GraphBtn onClick={fetchData}>Gerar gráfico</GraphBtn>
         </DatePickerWrapper>
       </div>
 
-      <h3>Gráfico de Temperatura e Umidade</h3>
+      {/* Gráfico de Temperatura e Umidade */}
       <CollapseChart 
       title="Gráfico de Temperatura e Umidade"
       data={data}
-      yDomain={[0, 100]}
+      
        areas={[
-    { dataKey: "hum", stroke: "#4FC3F7", name: "Humidade (%)", fill: "#4FC3F7" },
+    { dataKey: "hum", stroke: "#4FC3F7", name: "Umidade (%)", fill: "#4FC3F7" },
     { dataKey: "temp", stroke: "#FF6B6B", name: "Temperatura (°C)", fill: "#FF6B6B" },
   ]}
- 
-      />
+  />
       
 
-      <h3>Gráfico de Radiação Solar e Vento</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data}>
-          <XAxis dataKey={(data) => `${data.Date} ${data.Time}`} />
-          <YAxis domain={[0, 400]} />
-          <Tooltip labelStyle={{color: "black"}}/>
-          <Legend />
-          <Area type="monotone" dataKey="wind_dir_avg" fill="#36ff2f" stroke="#36ff2f" name="Direção média do Vento (°)" />
-          <Area type="monotone" dataKey="wind_rt" fill="#00bcd4" stroke="#00bcd4" name="Velocidade Inst. do Vento (m/s)" />
-        </AreaChart>
-      </ResponsiveContainer>
+      {/* Gráfico de Radiação Solar e Vento */}
+        <CollapseChart 
+      title="Gráfico de direção e intensidade do vento"
+      data={data}
+       areas={[
+    { dataKey: "wind_dir_rt", stroke: "#36ff2f", name: "Direção do vento (°)", fill: "#36ff2f" },
+    { dataKey: "wind_rt", stroke: "#00bcd4", name: "Intensidade do vento (m/s)", fill: "#00bcd4" },
+  ]}
+  />
 
-      <h3>Gráfico de Direção Média & Instantânea do Vento</h3>
-      <ResponsiveContainer width="100%" height={300}>
-        <AreaChart data={data}>
-          <XAxis dataKey={(data) => `${data.Date} ${data.Time}`} />
-          <YAxis domain={[0, 1100]} />
-          <Tooltip labelStyle={{color: "black"}}/>
-          <Legend />
-          <Area type="monotone" dataKey="bar" fill="#ff4a77" stroke="#ff4a77" name="Pressão atmosférica" />
-          <Area type="monotone" dataKey="uv_level" fill="#fbff16" stroke="#fbff16" name="Radiação solar (W/m²)" />
-        </AreaChart>
-      </ResponsiveContainer>
+      {/* Gráfico de Direção Média & Instantânea do Vento */}
+        <CollapseChart 
+      title="Gráfico de pressão atmosférica e radiação solar"
+      data={data}
+       areas={[
+    { dataKey: "bar", stroke: "#ff4a77", name: "Pressão atmosférica (bar)", fill: "#ff4a77" },
+    { dataKey: "uv_level", stroke: "#6f16ff", name: "Radiação solar (W/m²)", fill: "#6f16ff" },
+  ]}
+  />
+
+          <CollapseChart 
+      title="Gráfico de direção e intensidade média do vento"
+      data={data}
+       areas={[
+    { dataKey: "wind_dir_avg", stroke: "#2f44ff", name: "Direção média do vento (°)", fill: "#2f44ff" },
+    { dataKey: "wind_avg", stroke: "#ff16ff", name: "Intensidade média do vento (m/s)", fill: "#ff16ff" },
+  ]}
+  />
+
+          <CollapseChart 
+      title="Gráfico do pico de intensidade do vento"
+      data={data}
+       areas={[
+    { dataKey: "wind_peak", stroke: "#caa02b", name: "Pico de intensidade do vento (m/s)", fill: "#caa02b" },
+  ]}
+  />
+    
     </div>
   </div>
 </>

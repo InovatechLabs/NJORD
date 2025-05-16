@@ -5,7 +5,7 @@ interface AsideProps {
 }
 
 export const StyledAside = styled.aside<AsideProps>`
-  background-color: #271b41;
+  background-color: #1A2C3F;
   padding: ${(props) => (props.isCollapsed ? '0' : '1rem')};
   display: flex;
   flex-direction: column;
@@ -14,7 +14,8 @@ export const StyledAside = styled.aside<AsideProps>`
   top: 0;
   align-self: start;
   overflow: hidden;
-  height: 100%;
+  overflow-y: auto;
+  height: 100vh;
 
   width: ${(props) => (props.isCollapsed ? '0' : '16rem')};
   transition: width 0.4s ease, padding 0.3s ease;

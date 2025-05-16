@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Nav from '../components/nav/Nav';
-import { useAuth } from '../contexts/AuthContext';
 
 
 const PageContainer = styled.div`
@@ -173,7 +172,6 @@ interface UserInfo {
 
 const Settings: React.FC = () => {
 
-  const { isAuthenticated } = useAuth();
 
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -195,7 +193,7 @@ const Settings: React.FC = () => {
                 credentials: "include"
               });
             const data = await response.json();
-            if(data.is2FAEnabled == true) {
+            if(data.is2FAEnabled === true) {
               setIs2FAEnabled(true);
             }
             setUserInfo(data);

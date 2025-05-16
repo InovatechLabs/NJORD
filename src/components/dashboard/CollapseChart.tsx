@@ -6,7 +6,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 const ChartWrapper = styled.div`
   width: 100%;
   margin: 1.4rem;
-  background-color: #1c142f;
+  background-color: #0D1B2A;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
@@ -16,8 +16,8 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #271b41;
-  color: white;
+  background: #fff;
+  color: black;
   padding: 0.75rem 1rem;
   cursor: pointer;
 `;
@@ -52,11 +52,14 @@ export default function CollapseChart({ title, data, yDomain, areas }: Collapsib
       </Header>
 
       <Content isOpen={isOpen}>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={400}>
           <AreaChart data={data}>
-            <XAxis dataKey={(d) => `${d.Date} ${d.Time}`} />
+            <XAxis dataKey={(d) => `${d.Time}`} />
             <YAxis domain={yDomain} />
-            <Tooltip labelStyle={{ color: "black" }} />
+            <Tooltip labelStyle={{ color: "black" }} labelFormatter={(value, payload) => {
+    const originalDatum = payload?.[0]?.payload;
+    return `${originalDatum?.Date} ${originalDatum?.Time}`;
+  }}/>
             <Legend />
             <CartesianGrid opacity={0.2} vertical={false} />
             {areas.map((area) => (

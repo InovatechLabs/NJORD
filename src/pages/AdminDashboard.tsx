@@ -22,7 +22,6 @@ interface UserInfo {
 
 export default function AdminDashboard() {
     const [users, setUsers] = useState<UserInfo[]>([]);
-    const [error, setError] = useState<string>("");
     const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserInfo | null>(null);
@@ -139,7 +138,7 @@ function formatDate(dataISO: string): string {
         ))}
         
       </aside>
-      {selectedItem == "Usuários" ? (
+      {selectedItem === "Usuários" ? (
         <main className="flex-1 p-6 bg-white-50">
         <h2 className="text-2xl font-semibold mb-2">Lista de usuários cadastrados no sistema</h2>
         <p className="text-gray-500 mb-4">{users.length} usuários registrados</p>

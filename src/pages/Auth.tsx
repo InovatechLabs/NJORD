@@ -555,7 +555,7 @@ const Auth: FC = () => {
     )}
          {!requires2FA && (
             <>
-        {errorMessage && <FloatingError><img src="https://www.balipost.com/wp-content/uploads/2017/04/close-icon-white.png" />{errorMessage}</FloatingError>}
+        {errorMessage && <FloatingError><img src="https://www.balipost.com/wp-content/uploads/2017/04/close-icon-white.png" alt=""/>{errorMessage}</FloatingError>}
         {success && <FloatingSuccess><img src="https://img.icons8.com/m_outlined/512/FFFFFF/checked.png" style={{ width: '40px', height: '40px', color: 'white', marginLeft: '0' }} alt="success"/>{success}</FloatingSuccess>}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img
