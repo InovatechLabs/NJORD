@@ -16,6 +16,8 @@ import download from '../../src/images/download_icon.png';
 import styled from "styled-components";
 import CollapseChart from "../components/dashboard/CollapseChart";
 import Papa from 'papaparse';
+import { useAuth } from "../contexts/AuthContext";
+import { Overlay } from "../components/dashboard/StyledAside";
 
 interface CsvData {
   Date: string;
@@ -37,6 +39,8 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [groupByHour, setGroupByHour] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+
+  const { isAuthenticated } = useAuth();
 
   const today = new Date();
 
@@ -128,14 +132,17 @@ export default function Dashboard() {
   <div className="flex min-h-screen bg-[#0D1B2A]">
     {/* Menu lateral */}
     {data.length > 0 && (
-      <>
-      <div style={{ position: 'relative' }}>
-        <button
+  <>
+    <Overlay visible={!collapsed && window.innerWidth <= 520} onClick={() => setCollapsed(true)} />
+
+     {collapsed && (
+          <div style={{ position: 'relative' }}>
+      <button
         onClick={() => setCollapsed((prev) => !prev)}
         style={{
           position: 'absolute',
-          left: collapsed ? '0' : '16rem',
-          zIndex: 10,
+          left: collapsed ? '0' : window.innerWidth <= 520 ? '80%' : '16rem',
+          zIndex: 40,
           backgroundColor: '#3b82f6',
           color: 'white',
           border: 'none',
@@ -145,12 +152,17 @@ export default function Dashboard() {
           cursor: 'pointer',
         }}
       >
-        {collapsed ? '➡️' : '⬅️'}
+        {collapsed && (
+          '➡️'
+        )}
       </button>
-      </div>
-       <StyledAside isCollapsed={collapsed}>
-      <h1 className="text-xl font-bold mb-4 text-white p-1 text-center">Sumário</h1>
+    </div>
+     )} 
 
+    <StyledAside isCollapsed={collapsed}>
+
+      <p style={{position: 'absolute', top: '0', right: '0', color: 'red', fontWeight: '600', fontSize: '1.5rem', marginRight: '10px', cursor: 'pointer'}} onClick={() => setCollapsed((prev) => !prev)}>X</p>   
+      <h1 className="text-xl font-bold mb-4 text-white p-1 text-center">Sumário</h1>
 
       <div className="flex items-center gap-3 text-white py-2 hover:bg-blue-500 rounded-lg transition-all duration-200">
         <img src={tempSvg} alt="" className="w-10 h-10" />
@@ -199,9 +211,9 @@ export default function Dashboard() {
         <img src={wind_dir} alt="" className="w-10 h-10" />
         <div className="flex flex-col">
           <strong>Direção do vento:</strong>
-          <span>Máxima: <strong>{calcularMax("wind_dir_rt")} m/s</strong></span>
-          <span>Média: <strong>{calcularMedia("wind_dir_rt")} m/s</strong></span>
-          <span>Mínima: <strong>{calcularMin("wind_dir_rt")} m/s</strong></span>
+          <span>Máxima: <strong>{calcularMax("wind_dir_rt")} (°)</strong></span>
+          <span>Média: <strong>{calcularMedia("wind_dir_rt")} (°)</strong></span>
+          <span>Mínima: <strong>{calcularMin("wind_dir_rt")} (°)</strong></span>
         </div>
       </div>
 
@@ -215,11 +227,22 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <button 
-      className="flex flex-row-reverse items-center justify-end gap-2 px-2 py-6 mt-2 text-white bg-[transparent] hover:bg-[#4d9dff] rounded-md transition-colors duration-200"
-      onClick={handleExport}>Download dados
-      <img src={download} alt="Icon" className="w-10 h-10" />
-      </button>
+              <div className="relative inline-block group">
+                <button
+                  className="group-disabled:pointer-events-auto flex flex-row-reverse items-center justify-end gap-2 px-2 py-6 mt-2 text-white bg-transparent hover:bg-[#4d9dff] rounded-md transition-colors duration-200 disabled:cursor-not-allowed"
+                  disabled={!isAuthenticated}
+                  onClick={handleExport}
+                >
+                  Download dados
+                  <img src={download} alt="Icon" className="w-10 h-10" />
+                </button>
+
+                {!isAuthenticated && (
+                  <span className="absolute z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-3 py-2 text-sm text-white bg-black rounded-md left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap">
+                    Faça login para exportar dados
+                  </span>
+                )}
+              </div>
      </StyledAside>
 
      </>
@@ -404,4 +427,33 @@ const GraphBtn = styled.button`
   svg {
     font-size: 1.5rem;
   }
+`;
+
+const Tooltip = styled.div`
+  position: relative;
+  display: inline-block;
+
+  .tooltip-text {
+    visibility: hidden;
+    width: 160px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+
+    position: absolute;
+    bottom: 15%;
+    left: -130%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 1;
+  }
+
+  &:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+  }
+  
 `;
