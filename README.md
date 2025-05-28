@@ -7,13 +7,13 @@
 
 <div align="center">
 <h1>
-<a href="#bookmark_tabs-entregas-de-sprints">Entrega das Sprints</a> | <a href="https://trello.com/b/EtReA0xK/njord">Trello</a> | <a href="#bust_in_silhouette-user-stories">User Story</a> | <a href="#triangular_flag_on_post-backlog-do-produto">Backlog do Produto</a> | <a href="#chart_with_downwards_trend-gráfico-burndown-das-sprints">Burndown</a> | <a href="#page_facing_up-wireframe">Wireframe</a> | <a href="#busts_in_silhouette-equipe">Equipe</a> | <a href="https://github.com/InovatechLabs/Ceres-Vita/blob/main/docs/Requisitos%20ABP%20DSM-2SEM.pdf">Requisitos</a>
+<a href="#bookmark_tabs-entregas-de-sprints">Entrega das Sprints</a> | <a href="https://trello.com/b/EtReA0xK/njord">Trello</a> | <a href="#triangular_flag_on_post-backlog-do-produto">Backlog do Produto</a> | <a href="#chart_with_downwards_trend-gráfico-burndown-das-sprints">Burndown</a> | <a href="#busts_in_silhouette-equipe">Equipe</a> | <a href="https://github.com/InovatechLabs/Ceres-Vita/blob/main/docs/Requisitos%20ABP%20DSM-2SEM.pdf">Requisitos</a>
 </h1>
 </div>
 
 # :pencil: Sobre o Projeto
 
-Somos a NJORD, um grupo de desenvolvimento de software focado em criar soluções inovadoras. Este repositório apresenta o nosso mais recente projeto: consiste no desenvolvimento de uma plataforma web interativa para visualização, análise e disseminação de dados meteorológicos coletados por estações instaladas no Lago de Furnas, em Minas Gerais. A motivação principal é o registro frequente de eventos extremos de vento, que representam riscos significativos à navegação e segurança de embarcações.
+Somos a Innovatech Labs, um grupo de desenvolvimento de software focado em criar soluções inovadoras. Este repositório apresenta o nosso mais recente projeto: consiste no desenvolvimento de uma plataforma web interativa para visualização, análise e disseminação de dados meteorológicos coletados por estações instaladas no Lago de Furnas, em Minas Gerais. A motivação principal é o registro frequente de eventos extremos de vento, que representam riscos significativos à navegação e segurança de embarcações.
 
 ###  Objetivos do Projeto
 - Exibir os dados meteorológicos em tempo real e histórico, em formatos tabular e gráfico;
@@ -24,32 +24,27 @@ Somos a NJORD, um grupo de desenvolvimento de software focado em criar soluçõe
 
 - Tornar os dados acessíveis à população dos 30 municípios ao redor do lago, promovendo impacto tecnológico, social e econômico.
 
-###  Status do Projeto: Concluído
+###  Status do Projeto: Em andamento
 
 # :bookmark_tabs: Entregas de Sprints
 
 Os entregáveis serão realizados conforme as datas previamente acordadas com o cliente, acompanhados de um relatório completo do progresso alcançado durante as sprints.
 
-| Sprint  | Previsão de Entrega   | Status                            | Backlog das Sprints                                       | Retrospectiva das Sprints
-| ------- | --------------------- | --------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------- |
-| :one:   | :calendar: 20/09/2024 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb1.md)           | :round_pushpin: [Concluído](./docs/spr1.md)                   |
-| :two:   | :calendar: 11/10/2024 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb2.md)           | :round_pushpin: [Concluído](./docs/spr2.md)                   |
-| :three: | :calendar: 08/11/2024 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/sprintbacklog3.md) | :round_pushpin: [Concluído](./docs/spr3.md)                   |
+| Sprint  | Previsão de Entrega   | Status                            | Backlog das Sprints                                       
+| ------- | --------------------- | --------------------------------- | --------------------------------------------------------- |
+| :one:   | :calendar: 15/04/2025 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb1.md)           | 
+| :two:   | :calendar: 13/05/2025 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb2.md)           |
+| :three: | :calendar: 11/06/2025 | :yellow_square: Em andamento          | :round_pushpin: |
 
 # :triangular_flag_on_post: Backlog do Produto
 
 | Funcionalidade                                         | Descrição                                                                                                              |
 |--------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| **RF 01 - Registro de Usuário**                        | Registro no banco de dados utilizando DML através da cláusula INSERT; autenticação através do método .get.             |
-| **RF 02 - Gestão de Perfil do Usuário**                | Manipulação de dados pessoais, como idade, peso, altura e metas nutricionais.                                          |
-| **RF 03 - Registro de Ingestão Diária**                | Possibilidade de registrar os alimentos consumidos diariamente.                                                        |
-| **RF 04 - Cálculo Automático de Nutrientes**           | O sistema deve calcular automaticamente a ingestão de calorias, proteínas e outros nutrientes.                         |
-| **RF 05 - Histórico de Consumo**                       | Armazenamento da ingestão de alimentos em um histórico acessível a qualquer momento.                                   |
-| **RF 06 - Alertas e Notificações**                     | Modelo de decisão para verificar quando a ingestão de nutrientes está acima ou abaixo do recomendado.                  |
-| **RF 07 - Relatórios e Gráficos**                      | Geração de relatórios gráficos para visualizar o consumo de calorias e nutrientes.                                     |
-| **RF 08 - Integração com Banco de Dados de Alimentos** | O sistema deve integrar-se a um banco de dados que contenha informações nutricionais detalhadas de diversos alimentos. |
-| **RF 09 - Suporte a Dietas Específicas**               | Inserção e modificação de alertas de acordo com dietas especiais.                                                      |
-| **RF 10 - Prototipagem**                               | Protótipo navegável da aplicação criado no Figma para validação antes do desenvolvimento final.                        |
+| **RF 01 - Restringir acesso aos usuários cadastrados** | Regra do sistema em que as funcionalidades de exportar dados e comparação de dados fique restrita a usuários logados   |
+| **RF 02 - Visualizar histórico de dados por estação em formato tabular**                | Visualização dos dados do banco de dados em formato tabular                           |
+| **RF 03 - Visualizar em gráfico os parâmetros de uma estação**                | Visualização dos dados do banco de dados em formato gráfico                                     |
+| **RF 04 - Visualizar em gráfico o mesmo parâmetro de diversas estações (comparação de valores);**           | Permitir a comparação de dados coletados por diferentes estações  |
+| **RF 05 - Download de dados em formato CSV**                       | Permite o download em formato CSV dos dados visualizados para usuários cadastrados                         |
 
 # :chart_with_downwards_trend: Gráfico Burndown das Sprints
 
@@ -57,25 +52,8 @@ Os entregáveis serão realizados conforme as datas previamente acordadas com o 
 |---------------------------------------------------|-----------------------------------------------------------------------|
 | :green_square: Sprint 1 (Concluído)               | :round_pushpin: [Ver Relatório](/docs/burndown_ceres_vita.pdf)        |
 | :green_square: Sprint 2 (Concluído)               | :round_pushpin: [Ver Relatório](/docs/bdcv2.png)                      |
-| :green_square: Sprint 3 (Concluído)               | :round_pushpin: [Ver Relatório](/docs/bdcv3.png)                      |
+| :yellow_square: Sprint 3 (Em andamento)            | :round_pushpin:                                                       |
 
-# 📰 Modelo Entidade Relacionamento
-
-![Modelo Entidade Relacionamento](https://github.com/InovatechLabs/Ceres-Vita/blob/main/docs/EDR.png)
-
-# :bust_in_silhouette: User Stories
-
-| ID  | História do Usuário                                                                                                                                                                      | Critérios de Aceitação                                                                                                                                                                                                                                     | Porquê                                                                                                                                                                         |
-|-----|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1   | Como um usuário, desejo me registrar no sistema e autenticar minha conta, para que eu possa acessar minhas funcionalidades personalizadas.                                              | - Devo me registrar fornecendo nome, e-mail, senha e outras informações.<br>- Receber confirmação de registro bem-sucedido.<br>- Autenticar usando e-mail e senha registrados.<br>- Mensagem de erro para credenciais inválidas.                               | Eu, como usuário, quero me registrar e autenticar no sistema para acessar meus dados e funcionalidades de forma segura.                                                        |
-| 2   | Como um usuário, desejo gerenciar meu perfil pessoal, para que eu possa manter minhas informações atualizadas, incluindo idade, peso, altura e metas nutricionais.                     | - Atualizar informações pessoais no perfil.<br>- Alterações devem ser salvas e refletidas em futuras interações.<br>- Receber confirmação de alterações salvas.<br>- Mensagem de erro para dados incorretos ou incompletos.                                   | Eu, como usuário, quero manter meu perfil atualizado para que as recomendações e cálculos estejam alinhados com minhas metas atuais.                                           |
-| 3   | Como um usuário, desejo registrar os alimentos que consumo diariamente, para que eu possa monitorar minha ingestão calórica e de nutrientes.                                             | - Adicionar alimentos ao registro diário especificando nome, quantidade e detalhes nutricionais.<br>- Alimentos devem ser associados ao meu perfil e armazenados.<br>- Visualizar lista dos alimentos registrados.<br>- Confirmação ao adicionar alimento.   | Eu, como usuário, quero monitorar minha alimentação diária para garantir que estou atingindo minhas metas nutricionais.                                                        |
-| 4   | Como um usuário, desejo que o sistema calcule automaticamente minha ingestão diária de nutrientes, para que eu possa comparar com minhas metas nutricionais.                             | - O sistema deve calcular automaticamente calorias, proteínas, carboidratos e gorduras.<br>- Visualizar totais em comparação com metas nutricionais diárias.<br>- Notificação de erro se o cálculo falhar.                                               | Eu, como usuário, quero acompanhar meu consumo de nutrientes em relação às minhas metas diárias para ajustar minha alimentação conforme necessário.                            |
-| 5   | Como um usuário, desejo acessar um histórico do meu consumo alimentar, para que eu possa analisar minhas escolhas alimentares ao longo do tempo.                                          | - Visualizar histórico detalhado dos alimentos consumidos.<br>- Histórico deve incluir calorias e nutrientes.<br>- Filtrar e ordenar o histórico por data e tipo de alimento.                                                                                    | Eu, como usuário, quero revisar meu histórico de consumo para identificar padrões e ajustar minha dieta conforme necessário.                                                    |
-| 6   | Como um usuário, desejo configurar e receber alertas personalizados baseados nas minhas metas nutricionais e dietas específicas, para que eu possa manter minha alimentação em conformidade com meus objetivos. | - Configurar alertas personalizados para limites nutricionais.<br>- Notificação automática quando limites forem atingidos.<br>- Configurar alertas para restrições alimentares.<br>- Notificações devem incluir detalhes sobre nutrientes e metas.                 | Eu, como usuário, quero receber alertas personalizados para garantir que estou seguindo minhas metas nutricionais e respeitando minhas restrições alimentares.                |
-| 7   | Como um usuário, desejo gerar relatórios e gráficos sobre meu consumo de calorias e nutrientes, para que eu possa visualizar meu progresso ao longo do tempo.                             | - Gerar relatórios detalhados sobre consumo de nutrientes em diferentes períodos.<br>- Visualizar gráficos que mostrem progresso em relação às metas nutricionais.                                                                                             | Eu, como usuário, quero visualizar relatórios e gráficos do meu progresso para entender melhor minhas tendências alimentares e fazer ajustes conforme necessário.                 |
-
-[Link para a Documentação](./docs/00%20-%20User%20Stories%20-%20V1.pdf)
 
 # :wrench: Tecnologias Utilizadas
 
@@ -89,17 +67,13 @@ Os entregáveis serão realizados conforme as datas previamente acordadas com o 
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 ![Photoshop](https://img.shields.io/badge/adobe%20photoshop-%2331A8FF.svg?style=for-the-badge&logo=adobe%20photoshop&logoColor=white)
-![Postgre](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Trello](https://img.shields.io/badge/Trello-0052CC?style=for-the-badge&logo=trello&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
-![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
+![MongoDB]([https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white))
+![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
 
-## :page_facing_up: Wireframe
-
-![Wireframe Preview](./docs/Wireframe.png)  
-[Link para o Figma](https://www.figma.com/design/wi7A4TR5ebwOnwLGZntkqZ/Njord?node-id=31-10&t=kYfnLCBDr5zQkejj-0)
 
 ## :busts_in_silhouette: Equipe
 
@@ -118,37 +92,23 @@ Para instalar e executar o projeto localmente, siga estas etapas:
 
 1. **Clone o repositório:**
    ```bash
-   git clone https://github.com/InovatechLabs/Ceres-Vita.git
+   git clone https://github.com/InovatechLabs/NJORD.git
    ```
 2. **Acesse a pasta do projeto:**
    ```bash
-   cd Ceres-Vita
-   cd src
-   cd frontend
+   cd NJORD
    ```
 3. **Instale as dependências:**
    ```bash
    npm install
    ```
-4. **Volte para a pasta backend, e instale as dependências:**
+4. **Inicie o projeto inserindo o seguinte comando no terminal:**
    ```bash
-   cd ..
-   cd backend
-   npm install
-   ```
-5. **Execute o servidor:**
-   ```bash
-   npm run start
-   ```
-6. **Execute a visualização Vite no navegador (localhost):**
-   ```bash
-   cd ..
-   cd frontend
-   npm run dev
+   npm start
    ```
 7. **Abra o navegador e acesse:**
    ```bash
-   http://localhost:5173/home
+   http://localhost:3030/home
    ```
 
 ## :page_facing_up: Licença
