@@ -18,6 +18,7 @@ import CollapseChart from "../components/dashboard/CollapseChart";
 import Papa from 'papaparse';
 import { useAuth } from "../contexts/AuthContext";
 import { Overlay } from "../components/dashboard/StyledAside";
+import { CardCarousel } from "../components/dashboard/CardCarousel";
 
 interface CsvData {
   Date: string;
@@ -128,6 +129,9 @@ export default function Dashboard() {
   <GlobalStyles />
   <Nav />
   <DashBoardPresentation />
+  <div className="min-h-screen bg-gray-100 flex items-center justify-start">
+      <CardCarousel />
+    </div>
   
   <div className="flex min-h-screen bg-[#0D1B2A]">
     {/* Menu lateral */}
