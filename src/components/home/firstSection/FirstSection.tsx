@@ -1,6 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import bg from '../../../images/bg.webp';
+import { useNavigate } from "react-router-dom";
 
 const ImageContainer = styled.div`
 display: flex;
@@ -148,6 +149,10 @@ body {
 
 
 export default function FirstSection() {
+    const navigate = useNavigate();
+    const handleLearnClick = () => {
+        navigate('/saiba-mais');
+    }
 
     return (
         <>
@@ -169,7 +174,7 @@ export default function FirstSection() {
                 </Container>
                 <ButtonsDiv>
                     <Button>Comece já</Button>
-                    <Button2 >Saiba mais</Button2>
+                    <Button2 onClick={handleLearnClick}>Saiba mais</Button2>
                 </ButtonsDiv>
             </ImageContainer>
         </>

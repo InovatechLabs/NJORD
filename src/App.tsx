@@ -9,6 +9,7 @@ import RecoverPassword from './pages/RecoverPassword';
 import CsvManagerPage from './pages/CsvManager';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import SaibaMais from "../src/pages/LearnMore";
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
             <Route path='/csv' element={<CsvManagerPage />} />
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
+            <Route path="/saiba-mais" element={<SaibaMais />} />
         </Routes>
     </Router>
     </AuthProvider>

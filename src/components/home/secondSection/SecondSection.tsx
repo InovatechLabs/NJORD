@@ -123,8 +123,7 @@ function SecondSection() {
     return (
         <Container>
             <TextContainer>
-                <GreenTitle>Reúna funcionalidades meteorológicas</GreenTitle>
-                <Title>com Njord</Title>
+                <GreenTitle>Reúna funcionalidades meteorológicas com Njord</GreenTitle>
                 <Description>
                     O Njord oferece uma plataforma completa para monitoramento e análise de dados meteorológicos, essencial 
                     para a compreensão das condições climáticas em regiões críticas. A meteorologia desempenha um papel fundamental 
