@@ -6,7 +6,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import GlobalStyles from "../components/globalstyles/GlobalStyles";
 import { CustomDateInput } from "../components/dashboard/CustomDateInput";
 import { StyledAside } from "../components/dashboard/StyledAside";
-import DashBoardPresentation from "../components/dashboard/DashboardPresentation";
 import umiditySvg from '../../src/images/image 14.png';
 import uvSvg from '../../src/images/image 15.png';
 import windSvg from '../../src/images/image 16.png';
@@ -19,6 +18,7 @@ import Papa from 'papaparse';
 import { useAuth } from "../contexts/AuthContext";
 import { Overlay } from "../components/dashboard/StyledAside";
 import { CardCarousel } from "../components/dashboard/CardCarousel";
+import { motion } from "framer-motion";
 
 interface CsvData {
   Date: string;
@@ -128,11 +128,56 @@ export default function Dashboard() {
     <>
   <GlobalStyles />
   <Nav />
-  <DashBoardPresentation />
-  <div className="min-h-screen bg-gray-100 flex items-center justify-start">
-      <CardCarousel />
-    </div>
-  
+  <div className="relative">
+  <div className="min-h-screen w-full bg-gray-100 flex flex-row items-center justify-around px-12 py-8 gap-8">
+
+  <motion.div
+    className="max-w-2xl bg-[#0D1B2A] p-8 rounded-lg"
+    initial={{ opacity: 0, y: -30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, ease: "easeOut" }}
+  >
+    <TextWrapper>
+      <Paragraph>
+      Comece aqui
+    </Paragraph>
+    </TextWrapper>
+
+    <motion.h1
+      className="text-4xl font-bold mb-4 text-white"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+    >
+      Visualização Meteorológica Inteligente
+    </motion.h1>
+
+    <motion.p
+      className="text-gray-400"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+    >
+      Nossa solução oferece uma visualização eficiente e interativa dos dados meteorológicos por meio de gráficos dinâmicos e de alta qualidade. 
+      Obtenha acesso exclusivo a ferramentas que permitem explorar o histórico de dados de cada estação em formato tabular, visualizar parâmetros específicos 
+      através de gráficos intuitivos e realizar comparações entre diferentes estações em tempo real. 
+    </motion.p>
+  </motion.div>
+
+
+  {/* CardCarousel do lado direito */}
+  <motion.div className="max-w-4xl" initial={{ opacity: 0, y: -30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}>
+    <CardCarousel />
+  </motion.div>
+</div>
+   <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
+  <svg className="relative block w-full h-[90px]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <path d="M0 0L1200 0L1200 120L0 0Z" fill="#0D1B2A"></path>
+  </svg>
+</div>
+   </div>
   <div className="flex min-h-screen bg-[#0D1B2A]">
     {/* Menu lateral */}
     {data.length > 0 && (
@@ -459,5 +504,23 @@ const Tooltip = styled.div`
     visibility: visible;
     opacity: 1;
   }
-  
+
+`;
+
+const TextWrapper = styled.div`
+display: flex;
+align-items: center;
+border-left: 5px solid #415A77; 
+padding-left: 10px;          
+height: 25px;    
+margin-bottom: 20px;
+`;
+
+const Paragraph = styled.p`
+font-family: 'Inter', sans-serif;
+font-weight: 100;
+letter-spacing: 8px;
+text-transform: uppercase;
+color: white;
+font-size: 16px;     
 `;

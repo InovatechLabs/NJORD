@@ -1,15 +1,93 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { WaterFillCard } from "./WaterFill"; // ajuste o caminho conforme a sua estrutura
+import { WaterFillCard } from "./WaterFill";
+import tablegif from '../../images/table.gif';
+import chartgif from '../../images/chart.gif';
+import umidity from '../../images/image 14.png';
+import temp from '../../images/Layer_1.png';
+import uv from '../../images/image 15.png';
+import analysis from '../../images/analysis.gif';
 
 const cards = [
-  { id: 1, title: "Visão Tabular", content: "Ideal para quem precisa examinar informações específicas com precisão, permitindo uma navegação fácil entre linhas e colunas." },
-  { id: 2, title: "Card 2", content: "Conteúdo do card 2" },
-  { id: 3, title: "Card 3", content: "Conteúdo do card 3" },
-  { id: 4, title: "Card 4", content: "Conteúdo do card 4" },
+  {
+    id: 1,
+    title: "Visão Tabular",
+    content: (
+      <div className="flex items-center justify-center flex-col">
+        Ideal para quem precisa examinar informações específicas com precisão,
+        permitindo uma navegação fácil entre linhas e colunas.
+        <br />
+        <img
+          src={tablegif}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "70%" }}
+        />
+      </div>
+    ),
+  },
+   {
+    id: 2,
+    title: "Visão Gráfica",
+    content: (
+      <div className="flex items-center justify-center flex-col">
+        Torna a interpretação das informações mais rápida e intuitiva, ajudando na tomada de decisões baseada em insights visuais claros.
+        <br />
+        <img
+          src={chartgif}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "50%" }}
+        />
+      </div>
+    ),
+  },
+   {
+    id: 3,
+    title: "Dados Meteorológicos Integrados",
+    content: (
+      <div className="flex items-center justify-center flex-col">
+        A diversidade de dados apresentada permite monitorar com precisão as condições climáticas, 
+        facilitando a análise de padrões e a tomada de decisões informadas para navegação.
+        <br />
+        <div className="flex flex-row justify-center items-center">
+         <img
+          src={temp}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "20%" }}
+        />
+        <img
+          src={uv}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "20%" }}
+        />
+        <img
+          src={umidity}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "20%" }}
+        />
+        </div>
+       
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    title: "Manipulação Eficiente",
+    content: (
+      <div className="flex items-center justify-center flex-col">
+        Obtenha uma vasta gama de funções de manipulação de dados para trabalhar e visualizar da melhor forma
+        dados meteorológicos
+        <br />
+        <img
+          src={analysis}
+          alt="Exemplo de imagem"
+          style={{ marginTop: "10px", maxWidth: "70%" }}
+        />
+      </div>
+    ),
+  },
 ];
 
-const CARD_SPACING = 280; // distância entre os cards (px)
+const CARD_SPACING = 270; // distância entre os cards (px)
 
 export const CardCarousel = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -33,24 +111,16 @@ export const CardCarousel = () => {
 
   return (
     <div className="relative w-full flex items-center justify-center py-12">
-      {/* Neblina esquerda */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-gray-100 to-transparent z-20" />
-
-      {/* Neblina direita */}
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-gray-100 to-transparent z-20" />
-
-      {/* Botão Esquerdo */}
-      <button
-        onClick={handlePrev}
-        className="absolute left-4 z-50 p-2 bg-blue-800 text-white rounded-full shadow-lg hover:bg-blue-700"
-      >
-        <ChevronLeft size={24} />
-      </button>
-
       {/* Carrossel */}
       <div className="relative w-[800px] h-[550px] overflow-hidden flex items-center justify-center align-center">
+         {/* Neblina esquerda */}
+      <div className="pointer-events-none absolute left-0 top-0 h-full w-20 bg-gradient-to-r from-gray-100 to-transparent z-20" />
+
+      {/* Neblina direita */}
+      <div className="pointer-events-none absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-gray-100 to-transparent z-20" />
+
         {/* Cards */}
-        <div className="relative w-full max-w-4xl mx-auto h-[450px] flex items-center justify-center overflow-visible">
+        <div className="relative w-full max-w-4xl mx-auto h-[450px] flex items-center justify-center overflow-visible text-center">
           {cards.map((card, index) => {
             const relativeIndex = getRelativeIndex(index);
             const isActive = relativeIndex === 0;
@@ -68,22 +138,26 @@ export const CardCarousel = () => {
               >
                 <WaterFillCard
                   title={card.title}
-                  content={card.content}
+                  content=<div>{card.content}</div>
                   isActive={isActive}
                 />
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* Botão Direito */}
-      <button
+            <button
+        onClick={handlePrev}
+        className="absolute left-4 z-50 p-2 bg-blue-800 text-white rounded-full shadow-lg hover:bg-blue-700"
+      >
+        <ChevronLeft size={24} />
+      </button>
+        <button
         onClick={handleNext}
         className="absolute right-4 z-50 p-2 bg-blue-800 text-white rounded-full shadow-lg hover:bg-blue-700"
       >
         <ChevronRight size={24} />
       </button>
+        </div>
+      </div>
     </div>
   );
 };
