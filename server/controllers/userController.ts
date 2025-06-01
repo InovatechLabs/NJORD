@@ -8,6 +8,7 @@ import { AuthenticatedRequest } from '../middlewares/verifyToken';
 import mongoose from 'mongoose';
 import speakeasy from 'speakeasy';
 import qrcode from 'qrcode';
+import crypto from 'crypto';
 
 dotenv.config();
 
@@ -179,6 +180,18 @@ export const updateUserInfo = async (req: AuthenticatedRequest, res: Response) =
 
 export const enable2FA = async (req: AuthenticatedRequest, res: Response) => {
   try {
+
+  function generateBackupCode(length = 8) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const bytes = crypto.randomBytes(length);
+  let result = '';
+
+  for (let i = 0; i < length; i++) {
+    result += characters[bytes[i] % characters.length];
+  }
+
+  return result;
+}
     const userId = new mongoose.Types.ObjectId(req.user ? req.user._id : '');
 
     if(!req.user) {
@@ -200,7 +213,10 @@ export const enable2FA = async (req: AuthenticatedRequest, res: Response) => {
     return res.status(500).json({ message: 'Erro ao gerar URL do QR Code' });
   }
 
+    const backupCode = generateBackupCode();
+
     user.twoFASecret = secret.base32;
+    user.backupCode = backupCode;
     await user.save();
     const qrCodeDataUrl = await qrcode.toDataURL(secret.otpauth_url);
 
@@ -290,5 +306,34 @@ export const verifyLoginCode = async (req: AuthenticatedRequest, res: Response) 
   } catch (err) {
     console.error("Erro ao verificar código 2FA:", err);
     return res.status(500).json({ message: 'Erro ao verificar 2FA', err });
+  }
+}
+
+export const verifyBackupCode = async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { backupCode } = req.body;
+
+    const validCode = await User.findOne({ backupCode: backupCode }, 
+    { _id: 1, role: 1 });
+    console.log("Id e role retornados do validCode:", validCode?._id, validCode?.role);
+
+    if(!validCode) {
+      return res.status(404).json({message: 'Não foi possível encontrar este código de backup'});
+    }
+    const token = jwt.sign({_id: validCode._id, role: validCode.role}, process.env.JWT_SECRET!, {expiresIn: '1h'});
+    res.cookie('auth_token', token, {
+       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 3600000, 
+    });
+
+    validCode.backupCode = undefined;
+    await validCode.save();
+
+    return res.status(200).json({ message: 'Login bem-sucedido', token, fromBackupVerify: true });
+  } catch (err) {
+    console.error("Erro ao verificar backup code:", err);
+    return res.status(500).json({ message: 'Erro ao verificar backup code', err });
   }
 }

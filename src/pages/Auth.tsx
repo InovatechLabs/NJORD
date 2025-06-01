@@ -45,7 +45,7 @@ const Container = styled.div`
 
 `;
 
-const slideIn = keyframes`
+export const slideIn = keyframes`
   from {
     opacity: 0;
     transform: translateX(40px);
@@ -345,6 +345,7 @@ const Auth: FC = () => {
   const [tempToken, setTempToken] = useState<string>('');
   const [requires2FA, setRequires2FA] = useState(false);
   const [token2FA, setToken2FA] = useState<string | null>(null);
+  const [backupCode, setBackupCode] = useState<string | null>(null);
 
   const handleRegisterClick = () => {
     setisLogin(false);
@@ -458,6 +459,33 @@ const Auth: FC = () => {
     }, 4000);
   };
 
+      const handleBackupCodeSubmit = async () => {
+        try {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/verify-backup-code`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            backupCode: backupCode,
+          })
+          });
+          const result = await response.json();
+          if(result.message === 'Login bem-sucedido') {
+          setAuthenticated(true);
+          sessionStorage.setItem('fromBackupCode', 'true')
+          navigate('/home');
+          } else {
+            setErrorMessage('Código backup inválido.')
+          }
+        } catch (error) {
+          console.error("Erro ao enviar token para backend:", error)
+        } setTimeout(() => {
+        setErrorMessage("");
+      }, 4000);
+      }
+
   const handleVerify2FACode = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/verify-login-code`, {
@@ -548,6 +576,8 @@ const Auth: FC = () => {
       {requires2FA && (
       <div>
         <TwoFactorCard onCodeChange={setToken2FA} 
+        onBackupCodeChange={setBackupCode}
+        onBackupCodeSubmit={handleBackupCodeSubmit}
         onSubmit={handleVerify2FACode}
         showSubmitButton
         />

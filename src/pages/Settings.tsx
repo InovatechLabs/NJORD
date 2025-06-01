@@ -7,26 +7,35 @@ const PageContainer = styled.div`
   background-color: #0D1B2A; 
   color: #ffffff;
   display: flex;
-  justify-content: center;
+  padding: 5px;
   align-items: center;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
 `;
 
 const FormContainer = styled.div`
-  background-color: #1B263B; 
+  background-color: #ebebeb; 
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
+  width: 80%;
+  max-width: 1400px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  justify-content: space-around;
+  margin-top: 15px;
+  flex-direction: row;
+  @media (max-width: 1280px) {
+    width: 100%;
+  }
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    width: 100%;
+  }
   @media(max-width: 455px) {
-    width: 70%;
+    width: 100%;
   }
 `;
 
@@ -39,28 +48,34 @@ const InputField = styled.input`
   width: 85%;
   padding: 10px;
   margin: 10px 0;
-  border-radius: 4px;
-  border: 1px solid #415A77; 
-  background-color: #2C3E50; 
-  color: white;
+  border-bottom: 2px solid black; 
+  background-color: transparent; 
+  color: black;
+  outline: none;
   font-size: 16px;
+  @media(max-width: 1024px) {
+    width: 100%;
+  }
   @media(max-width: 455px) {
-    width: 65%;
+    width: 100%;
   }
 `;
 
 const InputFieldWithButton = styled.input`
   width: 85%;
   padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #415A77;
-  background-color: #2C3E50; 
-  color: white;
+  border-bottom: 2px solid black;
+  background-color: transparent; 
+  color: black;
+  outline: none;
   font-size: 16px;
   margin: 10px 0;
   padding: 10px;
+  @media(max-width: 1024px) {
+    width: 100%;
+  }
   @media(max-width: 455px) {
-    width: 65%;
+    width: 100%;
   }
 `;
 
@@ -98,9 +113,9 @@ const InfoIcon = styled.span`
 `;
 
 const SubmitButton = styled.button`
-  width: 100%;
+  width: 85%;
   padding: 12px;
-  background-color: #00E676;
+  background-color: #415A77;
   border: none;
   border-radius: 4px;
   color: white;
@@ -109,10 +124,13 @@ const SubmitButton = styled.button`
   transition: background-color 0.3s ease;
   
   &:hover {
-    background-color: #00B35B;
+    background-color: #223852;
+  }
+  @media(max-width: 1024px) {
+    width: 100%;
   }
   @media(max-width: 455px) {
-    width: 65%;
+    width: 100%;
   }
 `;
 
@@ -168,6 +186,7 @@ interface UserInfo {
   email: string;
   senha: string;
   is2FAEnabled: boolean;
+  backupCode: string;
 }
 
 const Settings: React.FC = () => {
@@ -184,6 +203,9 @@ const Settings: React.FC = () => {
     setPasswordVisible(!passwordVisible);
   };
 
+  const handleReload = () => {
+    window.location.reload();
+  }
 
   useEffect(() => {
     const getUserData = async () => {
@@ -286,11 +308,19 @@ const Settings: React.FC = () => {
     <>
     <Nav />
     <PageContainer>
+      <div className="flex flex-col w-[85%] text-left mt-16">
+  <h1 className="text-3xl sm:text-5xl m-4">⚙️ Configurações</h1>
+  <div className="h-[2px] bg-gray-300 w-[100%] ml-4" />
+</div>
+     
       <FormContainer>
-        <FormTitle>Alterar Informações</FormTitle>
-        
+        <div className='flex flex-col w-full lg:w-[50%]'>
+        <div className='flex flex-row items-center'>
+        <img src='https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png' style={{width: '20%', height: '20%'}}/>
+        <h1 className="text-3xl sm:text-5xl m-4 text-black">🔑 Credenciais</h1>
+        </div>
         {error && <ErrorMessage>{error}</ErrorMessage>}
-        
+    
         {userInfo ? (
           <>
           <InputField
@@ -312,27 +342,32 @@ const Settings: React.FC = () => {
                   onChange={(e) => handleInputChange(e, "senha")}
                   placeholder="Senha"
                 />
-                <div className='row' style={{ display: 'flex', flexDirection: 'row'}}>
+                <div className='row flex flex-row justify-center items-center'>
                 <button onClick={togglePasswordVisibility} type="button" style={{ background: 'none', border: 'none', outline: 'none', fontSize: '18px', cursor: 'pointer'}}>
                   {passwordVisible ? "🙈" : "👁️"}
                 </button>
                 <InfoIcon>❓</InfoIcon>
                 <Tooltip>Sua senha está criptografada por questões de segurança.</Tooltip>
                 </div>
-                <SubmitButton onClick={handleSubmit}>Salvar</SubmitButton>
+                <SubmitButton onClick={handleSubmit}>Editar</SubmitButton>
           </>
+          
         ) : (
           <p>Carregando...</p>
         )}
-        {!is2FAEnabled ? (
-              <div className="twofa-container" style={{ marginTop: '30px'}}>
-                <h5>Status 2FA: ❌Desativado</h5>
+        </div>
+        <div className='flex flex-col w-full xl:w-[50%] mt-4 gap-4'>
+             <h1 className="text-3xl sm:text-5xl m-4 text-black">🔒 Segurança</h1>
+        
+          {!is2FAEnabled ? (
+              <div className="text-black" style={{ marginTop: '30px'}}>
+                <div className='bg-gray-300 px-2 py-4 rounded-sm text-black text-xl'>Status 2FA: ❌Desativado</div>
                 <h2>Ativar 2FA</h2>
                 <p>Para aumentar a segurança da sua conta, ative a autenticação em dois fatores.</p>
                 <SubmitButton onClick={enable2FA}>Ativar 2FA</SubmitButton>
-
+                    
                 {qrCodeDataUrl && (
-                  <div className="qr-code-container">
+                  <div className="flex items-center justify-center flex-col m-4">
                     <img src={qrCodeDataUrl} alt="QR Code para Google Authenticator" />
                     <p>Escaneie o QR Code com o seu aplicativo de autenticação.</p>
                     <InputField
@@ -344,10 +379,28 @@ const Settings: React.FC = () => {
                     <SubmitButton onClick={verify2FA}>Verificar Código</SubmitButton>
                   </div>
                 )}
-              </div>
+                   </div>
             ) : (
-              <div>Status 2FA: ✔️Ativo</div>
+              <div className='flex flex-col justify-center items-center'>
+              <div className='bg-gray-300 px-2 py-4 rounded-sm text-black text-xl w-full m-4'>Status 2FA: ✔️Ativo</div>
+              <div className='flex flex-col sm:flex-row items-center justify-start w-full align-left'>
+                <img src='https://icons.veryicon.com/png/o/miscellaneous/google_material_offical/backup-20.png' style={{ width: '50px', height: '50px' }} />
+              <p className='text-xl text-black ml-2'>Código de Backup</p>
+              <input type='disabled' value={userInfo?.backupCode} className='bg-gray-300 px-1 py-2 ml-3 text-black text-center'/>
+              <img src='https://www.iconpacks.net/icons/2/free-refresh-icon-3104-thumb.png' style={{ width: '25px', height: '25px', margin: '5px' }} onClick={handleReload}/>
+              </div>
+              <div className='flex flex-row w-full items-center justify-start mt-4'>
+              <img src='https://cdn1.iconfinder.com/data/icons/color-bold-style/21/08-512.png' style={{ width: '50px', height: '50px' }} />
+              <p className='text-lg text-black ml-2'>O código de backup é de uso exclusivo para caso você perca acesso ao seu aplicativo autenticador.
+                Guarde-o em um lugar de fácil acesso. Uma vez utilizado, será automaticamente deletado.
+              </p>
+              </div>
+              </div>
+         
             )}
+       
+             </div>
+            
       </FormContainer>
     </PageContainer>
     </>

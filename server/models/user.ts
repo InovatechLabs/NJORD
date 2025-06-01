@@ -12,6 +12,7 @@ interface IUser extends Document {
     resetTokenExpires?: Date;
     is2FAEnabled?: boolean;
     twoFASecret?: string;
+    backupCode?: string;
   }
 
   const UserSchema: Schema = new Schema(
@@ -48,6 +49,10 @@ interface IUser extends Document {
         default: false
       },
       twoFASecret: {
+        type: String,
+        default: null
+      },
+      backupCode: {
         type: String,
         default: null
       },

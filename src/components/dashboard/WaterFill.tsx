@@ -15,7 +15,7 @@ export const WaterFillCard: React.FC<WaterFillCardProps> = ({
 
   return (
     <div
-      className={`relative w-72 h-[400px] rounded-2xl border border-blue-600 overflow-hidden
+      className={`relative w-60 xs:w-72  h-[400px] rounded-2xl border border-blue-600 overflow-hidden
         ${isActive ? "text-white" : "text-gray-900"}`}
     >
       {/* Nível da água */}

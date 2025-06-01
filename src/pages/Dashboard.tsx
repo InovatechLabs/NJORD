@@ -129,7 +129,7 @@ export default function Dashboard() {
   <GlobalStyles />
   <Nav />
   <div className="relative">
-  <div className="min-h-screen w-full bg-gray-100 flex flex-row items-center justify-around px-12 py-8 gap-8">
+  <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
 
   <motion.div
     className="max-w-2xl bg-[#0D1B2A] p-8 rounded-lg"
@@ -166,7 +166,7 @@ export default function Dashboard() {
 
 
   {/* CardCarousel do lado direito */}
-  <motion.div className="max-w-4xl" initial={{ opacity: 0, y: -30 }}
+  <motion.div className="max-w-lg sm: max-w-xl" initial={{ opacity: 0, y: -30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}>
     <CardCarousel />
@@ -300,7 +300,10 @@ export default function Dashboard() {
 
     {/* Conteúdo principal */}
     <div className="flex-1 p-6 flex flex-col items-center text-white">
-      <Title>Para começar, selecione o intervalo de datas para a visualização dos dados:</Title>
+      {!data.length && (
+        <Title>Para começar, selecione o intervalo de datas para a visualização dos dados:</Title>
+      )}
+      
 
       <div className="flex items-center justify-center gap-4 mb-6">
         <DatePickerWrapper>

@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { register, login, logout, getUserInfo, updateUserInfo, enable2FA, verify2FA, verifyLoginCode } from '../controllers/userController';
+import { register, login, logout, getUserInfo, updateUserInfo, enable2FA, verify2FA, verifyLoginCode, verifyBackupCode } from '../controllers/userController';
 import { authenticate } from '../middlewares/verifyToken';
 import { authorizeAdmin } from '../middlewares/authorizeAdmin';
 
@@ -15,6 +15,7 @@ userRouter.put("/update", authenticate, updateUserInfo);
 userRouter.post("/enable-2fa", authenticate, enable2FA);
 userRouter.post("/verify-2fa", authenticate, verify2FA);
 userRouter.post("/verify-login-code", verifyLoginCode);
+userRouter.post("/verify-backup-code", verifyBackupCode);
 
 // Rota usada pelo contexto de autenticaçao para validar a sessão do usuario
 userRouter.get('/verify', authenticate, (req, res) => {
