@@ -8,6 +8,9 @@ module.exports = {
       screens: {
         xs: '590px'
       },
+      fontFamily: {
+        serif: ['Lora', 'serif']
+      },
     },
   },
   plugins: [],

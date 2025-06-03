@@ -19,6 +19,9 @@ import { useAuth } from "../contexts/AuthContext";
 import { Overlay } from "../components/dashboard/StyledAside";
 import { CardCarousel } from "../components/dashboard/CardCarousel";
 import { motion } from "framer-motion";
+import { IconChartBar } from '@tabler/icons-react';
+import { IconTable } from '@tabler/icons-react';
+import { useNavigate } from "react-router-dom";
 
 interface CsvData {
   Date: string;
@@ -40,6 +43,17 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [groupByHour, setGroupByHour] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
+  const [formato, setFormato] = useState<'tabela' | 'grafico'>('grafico');
+
+  const navigate = useNavigate();
+
+      const handleTableClick = () => {
+        navigate('/dashboard/table');
+      };
+
+      const handleGraphicClick = () => {
+        navigate('/dashboard');
+      };
 
   const { isAuthenticated } = useAuth();
 
@@ -59,7 +73,6 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
 
-      console.log("Datas enviadas:", formattedStart, formattedEnd);
       const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/csv/dashboard`, {
         params: {
           start: formattedStart,
@@ -129,55 +142,84 @@ export default function Dashboard() {
   <GlobalStyles />
   <Nav />
   <div className="relative">
-  <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
+          <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
+        
+          <motion.div
+            className="max-w-2xl bg-transparent p-8 rounded-lg"
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            {/* <TextWrapper>
+              <Paragraph>
+              Comece aqui
+            </Paragraph>
+            </TextWrapper> */}
+            
+        
+            <motion.h1
+              className="text-4xl font-bold mb-4 text-[#00405c] font-serif"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            >
+              Visualização Meteorológica Inteligente
+            </motion.h1>
+        
+            <motion.p
+              className="text-gray-500"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+            >
+              Nossa solução oferece uma visualização eficiente e interativa dos dados meteorológicos por meio de gráficos dinâmicos ou tabelas intuitivas e de alta qualidade. 
+              Obtenha acesso exclusivo a ferramentas que permitem explorar o histórico de dados de cada estação e visualizar parâmetros específicos. 
+            </motion.p>
 
-  <motion.div
-    className="max-w-2xl bg-[#0D1B2A] p-8 rounded-lg"
-    initial={{ opacity: 0, y: -30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5, ease: "easeOut" }}
-  >
-    <TextWrapper>
-      <Paragraph>
-      Comece aqui
-    </Paragraph>
-    </TextWrapper>
+            <h2 className='mt-4'>Como você deseja visualizar os dados?</h2>
+      <div className='flex flex-row mt-4 gap-2'>
+        <button
+          onClick={() => {
+            setFormato('tabela');
+            handleTableClick(); 
+          }}
+          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
+            formato === 'tabela' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+          }`}
+        >
+          <IconTable size={20} />
+          Formato tabular
+        </button>
 
-    <motion.h1
-      className="text-4xl font-bold mb-4 text-white"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-    >
-      Visualização Meteorológica Inteligente
-    </motion.h1>
-
-    <motion.p
-      className="text-gray-400"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-    >
-      Nossa solução oferece uma visualização eficiente e interativa dos dados meteorológicos por meio de gráficos dinâmicos e de alta qualidade. 
-      Obtenha acesso exclusivo a ferramentas que permitem explorar o histórico de dados de cada estação em formato tabular, visualizar parâmetros específicos 
-      através de gráficos intuitivos e realizar comparações entre diferentes estações em tempo real. 
-    </motion.p>
-  </motion.div>
-
-
-  {/* CardCarousel do lado direito */}
-  <motion.div className="max-w-lg sm: max-w-xl" initial={{ opacity: 0, y: -30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}>
-    <CardCarousel />
-  </motion.div>
-</div>
-   <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
-  <svg className="relative block w-full h-[90px]" viewBox="0 0 1200 120" preserveAspectRatio="none">
-    <path d="M0 0L1200 0L1200 120L0 0Z" fill="#0D1B2A"></path>
-  </svg>
-</div>
-   </div>
+        <button
+          onClick={() => {
+            setFormato('grafico');
+            handleGraphicClick(); 
+          }}
+          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
+            formato === 'grafico' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+          }`}
+        >
+          <IconChartBar size={20} />
+          Formato gráfico
+        </button>
+      </div>
+          </motion.div>
+        
+        
+          {/* CardCarousel do lado direito */}
+          <motion.div className="max-w-lg sm: max-w-xl" initial={{ opacity: 0, y: -30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}>
+            <CardCarousel />
+          </motion.div>
+        </div>
+           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0] rotate-180">
+          <svg className="relative block w-full h-[90px]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0 0L1200 0L1200 120L0 0Z" fill="#0D1B2A"></path>
+          </svg>
+        </div>
+           </div>
   <div className="flex min-h-screen bg-[#0D1B2A]">
     {/* Menu lateral */}
     {data.length > 0 && (
@@ -389,7 +431,7 @@ export default function Dashboard() {
   );
 }
 
-const Title = styled.h1`
+export const Title = styled.h1`
         font-size: 30px;
         font-weight: 700;
         margin-bottom: 20px;
@@ -456,7 +498,7 @@ export const DatePickerWrapper = styled.div`
   gap: 15px;
 `;
 
-const GraphBtn = styled.button`
+export const GraphBtn = styled.button`
   display: flex;
   align-items: center;
   gap: 10px;
@@ -510,7 +552,7 @@ const Tooltip = styled.div`
 
 `;
 
-const TextWrapper = styled.div`
+export const TextWrapper = styled.div`
 display: flex;
 align-items: center;
 border-left: 5px solid #415A77; 
@@ -519,7 +561,7 @@ height: 25px;
 margin-bottom: 20px;
 `;
 
-const Paragraph = styled.p`
+export const Paragraph = styled.p`
 font-family: 'Inter', sans-serif;
 font-weight: 100;
 letter-spacing: 8px;

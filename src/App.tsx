@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Auth from './pages/Auth';
@@ -10,6 +11,7 @@ import CsvManagerPage from './pages/CsvManager';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import SaibaMais from "../src/pages/LearnMore";
+import TableView from './pages/TableView';
 
 function App() {
 
@@ -39,6 +41,7 @@ function App() {
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
             <Route path="/saiba-mais" element={<SaibaMais />} />
+            <Route path="/dashboard/table" element={<TableView />} />
         </Routes>
     </Router>
     </AuthProvider>
