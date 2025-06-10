@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import express, { Request, Response } from 'express';
 import chalk from 'chalk';
 import cookieParser from 'cookie-parser';
-import { pool } from './databases/mysql/mysql';
+import { pool } from './databases/mysql/estfrn02';
 // Rotas
 import userRouter from './routes/userRoutes';
 import recoverRouter from './routes/recoverPasswordRouter';
@@ -15,6 +15,10 @@ import adminRouter from './routes/admin/adminManagementRoutes';
 
 // Modelos
 import User from './models/user';
+import { pool_estfrn01 } from './databases/mysql/estfrn01';
+import comparisonRouter from './routes/comparisonRoutes';
+
+
 
 const app = express();
 
@@ -29,9 +33,10 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 
 // ===================== ROTAS =====================
-app.use("/api/user", userRouter);         // Autenticação
-app.use("/api/recover", recoverRouter);   // Recuperação de senha
-app.use("/api/csv", csvRouter);           // Upload de CSV
+app.use("/api/user", userRouter);          // Autenticação
+app.use("/api/recover", recoverRouter);    // Recuperação de senha
+app.use("/api/csv", csvRouter);            // Upload de CSV
+app.use("/api/compare", comparisonRouter); // Comparação de valores
 
 app.use("/api/admin", adminRouter);       // Rotas para admin
 
@@ -66,7 +71,11 @@ async function startServer() {
   try {
     // Testa conexão com MySQL
     await pool.query('SELECT 1');
-    console.log(chalk.green('✅ Conectado ao MySQL com sucesso'));
+    console.log(chalk.green('✅ Conectado ao MySQL - estfrn02 com sucesso'));
+
+    //Conecta à estação estfrn01
+    await pool_estfrn01.query('SELECT 1');
+    console.log(chalk.green('✅ Conectado ao MySQL - estfrn01 com sucesso'));
 
     // Conecta ao MongoDB
     await mongoose.connect(MONGODB_URL);

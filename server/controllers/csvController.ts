@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import CsvData from '../models/csvData';
-import { pool } from '../databases/mysql/mysql';
+import { pool } from '../databases/mysql/estfrn02';
 
 export const uploadCsvData = async (req: Request, res: Response) => {
   try {
