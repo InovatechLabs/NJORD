@@ -42,9 +42,10 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
   const endStr = endDate.toISOString().slice(0, 10);
   
   try {
-    const [data] = await pool.query('SELECT *, DATE(reading_time) AS Date FROM `Sensor` WHERE DATE(reading_time) BETWEEN ? AND ?',
+    const [data] = await pool.query(
+      'SELECT *, DATE(reading_time) AS Date FROM `Sensor` WHERE DATE(reading_time) BETWEEN ? AND ?',
       [startStr, endStr]
-    )
+    );
 
     // Se for por dia, agrupar e calcular médias
     if (groupByHour === "false") {
@@ -60,7 +61,7 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
           registros.reduce((acc: number, curr: any) => acc + parseFloat(curr[campo] || 0), 0);
         const media = (campo: string) => soma(campo) / registros.length;
 
-        const date = new Date(data)
+        const date = new Date(data);
         const finalDate = date.toISOString().slice(0, 10);
         return {
           Date: finalDate,
@@ -81,3 +82,19 @@ export const getCsvForDashboard = async (req: Request, res: Response) => {
   }
 };
 
+// Endpoint para buscar o último dado registrado
+export const getLastCsvData = async (req: Request, res: Response) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM `Sensor` ORDER BY `reading_time` DESC LIMIT 1'
+    );
+
+    if (Array.isArray(rows) && rows.length > 0) {
+      return res.json(rows[0]);
+    } else {
+      return res.status(404).json({ message: "Nenhum dado encontrado." });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: "Erro ao buscar o último dado", error });
+  }
+};
