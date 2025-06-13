@@ -8,6 +8,7 @@ import Footer from "../components/home/footer/Footer";
 import { ModalOverlay, ModalContent, CloseModalButton } from "./Auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import TimedButton from '../components/home/TimedButton';
+import Alert from '../components/home/alert/Alert';
 
 // Imagens
 import tempSvg from '../images/Layer_1.png';
@@ -88,7 +89,7 @@ export default function Home() {
       return { message: "Vento forte (39 a 49 km/h) - Risco à navegação.", color: "bg-orange-600", icon: "🚨" };
     }
     if (windKmH < 61) {
-      return { message: "Ventania moderada (50 a 61 km/h) - Perigo significativo.", color: "bg-red-500", icon: "🟥" };
+      return { message: "Ventania moderada (50 a 61 km/h) - Perigo significativo.", color: "bg-red-300", icon: "🟥" };
     }
     if (windKmH < 74) {
       return { message: "Ventania forte (62 a 74 km/h) - Navegação não recomendada.", color: "bg-red-600", icon: "🛑" };
@@ -121,87 +122,8 @@ export default function Home() {
 
       <Nav onAboutClick={scrollToThirdSection} />
       <FirstSection />
-      {/* Barra Horizontal Resumo Meteorológico */}
-      <div className="w-full bg-[#0D1B2A] px-6 py-4 flex justify-center">
-        <div className="text-white text-sm mb-3">
-            {ultimoDado?.reading_time && (
-              <span>
-                Última leitura:{" "}
-                {new Date(ultimoDado.reading_time).toLocaleDateString("pt-BR")} às{" "}
-                {new Date(ultimoDado.reading_time).toLocaleTimeString("pt-BR", {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
-            )}
-          </div>
+      <Alert />
 
-        <div className="flex flex-row flex-wrap justify-center gap-8 bg-[#1E293B] px-8 py-4 rounded-lg">
-        
-         {/* Temperatura */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={tempSvg} alt="Temperatura" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Temperatura</span>
-             <span className="font-semibold">{getValor("temp")}°C</span>
-           </div>
-         </div    >
- 
-         {/* Umidade */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={umiditySvg} alt="Umidade" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Umidade</span>
-             <span className="font-semibold">{getValor("hum")}%</span>
-           </div>
-         </div    >
- 
-         {/* Radiação UV */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={uvSvg} alt="UV" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Radiação UV</span>
-             <span className="font-semibold">{getValor("uv_level")} W/m²</span>
-           </div>
-         </div    >
- 
-         {/* Vento */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={windSvg} alt="Vento" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Vento</span>
-             <span className="font-semibold">{getValor("wind_rt")} m/s</span>
-           </div>
-         </div    >
- 
-         {/* Direção do vento */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={wind_dir} alt="Direção" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Direção do vento</span>
-             <span className="font-semibold">{getValor("wind_dir_rt")}°</span>
-           </div>
-         </div    >
- 
-         {/* Pico de intensidade */}
-         <div className="flex items-center gap-2 text-white">
-           <img src={wind_dir} alt="Pico" className="w-6 h-6" />
-           <div className="flex flex-col">
-             <span className="text-sm text-gray-300">Pico de intensidade</span>
-             <span className="font-semibold">{getValor("wind_peak")} m/s</span>
-           </div>
-         </div>
-       </div>
-       {ultimoDado?.wind_rt && (() => {
-          const { message, color, icon } = getBeaufortAlert(Number(ultimoDado.wind_rt));
-          return (
-            <div className={`mt-3 text-center px-4 py-2 ${color} text-black text-sm rounded-md max-w-2xl flex items-center justify-center gap-2`}>
-              <span className="text-lg">{icon}</span>
-              <span className="font-medium">{message}</span>
-            </div>
-          );
-        })()}
-     </div>
       <SecondSection />
       <ThirdSection ref={thirdSectionRef} />
       <Footer />

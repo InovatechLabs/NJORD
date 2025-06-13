@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        xs: '590px'
+        xs: '590px',
+        sx: '470px',
       },
       fontFamily: {
         serif: ['Lora', 'serif']

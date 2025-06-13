@@ -194,7 +194,7 @@ const ThirdSection = forwardRef<HTMLDivElement>((props, ref) => {
       </OrbitContainer>
                 </SvgSection>
                 <TextSection>
-                    <TextTitle>+ de 4.300 medições realizadas</TextTitle>
+                    <TextTitle>+ de 31.000 medições realizadas</TextTitle>
                     <TextDescription>Utilizando nosso produto, você terá acesso a uma ampla gama de dados 
                     e informações valiosas sobre o clima, com precisão e atualizações constantes. Alguns tipos de dados incluem:</TextDescription>
 
