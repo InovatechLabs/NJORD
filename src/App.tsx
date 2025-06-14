@@ -12,6 +12,7 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import SaibaMais from "../src/pages/LearnMore";
 import TableView from './pages/TableView';
+import ComparisonPage from './pages/ComparisonPage'
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
             <Route path='/admin/dashboard' element={<AdminDashboard />} />
             <Route path="/saiba-mais" element={<SaibaMais />} />
             <Route path="/dashboard/table" element={<TableView />} />
+            <Route path='/compare-data' element={<ComparisonPage />} />
         </Routes>
     </Router>
     </AuthProvider>
