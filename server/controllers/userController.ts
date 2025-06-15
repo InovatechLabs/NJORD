@@ -20,9 +20,36 @@ export const register = async (req: Request, res: Response) => {
     try {
         // Verificando se todos os parâmetros necessarios para registro foram passados pelo body
         if(!nome || !email || !senha) {
-            return res.status(404).json({ 
+            return res.status(400).json({ 
             message: 'Todos credenciais são obrigatórios.'})
         }
+
+          let passwordLengthMatch: boolean = false;
+          let value: number = 0;
+
+          let upperCaseRegex = /[A-Z]/.test(senha);
+          let numberRegex = /[0-9]/.test(senha);
+          let lowerCaseRegex = /[a-z]/.test(senha);
+          let specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+
+          if (upperCaseRegex) value += 20;
+          if (lowerCaseRegex) value += 20;
+          if (numberRegex) value += 20;
+          if (specialCharacterRegex) value += 20;
+          if (senha.length >= 8) value += 20;
+
+          if (senha.length >= 8) {
+            passwordLengthMatch = true;
+          }
+
+          if(!passwordLengthMatch) {
+            return res.status(400).json({ message: 'A senha não possui o mínimo de caracteres esperados.'});
+          }
+
+          if(value < 60) {
+            return res.status(400).json({ message: 'A senha não possui os requisitos necessários para validação.'})
+          }
+      
         // Verificando se o mail inserido pelo usuario já está cadastrado
         const usuarioExistente = await User.findOne({ email });
         if(usuarioExistente) {

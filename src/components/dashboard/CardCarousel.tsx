@@ -87,7 +87,8 @@ const cards = [
   },
 ];
 
-const CARD_SPACING = 270; // distância entre os cards (px)
+const isMobile = window.innerWidth < 640;
+const CARD_SPACING = isMobile ? 180 : 270; // distância entre os cards
 
 
 
@@ -114,12 +115,12 @@ export const CardCarousel = () => {
    return (
     <div className="relative w-full flex items-center justify-center py-12">
       {/* Carrossel */}
-      <div className="relative w-[800px] h-[550px] overflow-hidden flex items-center justify-center align-center">
-         {/* Neblina esquerda */}
-      <div className="pointer-events-none absolute left-0 top-0 h-[90%] w-20 bg-gradient-to-r from-gray-100 to-transparent z-20" />
+      <div className="relative w-full max-w-[800px] h-[550px] overflow-hidden flex items-center justify-center">
+   {/* Neblina esquerda */}
+<div className="pointer-events-none absolute left-0 top-0 h-[90%] w-12 sm:w-20 bg-gradient-to-r from-gray-100 to-transparent z-20" />
 
-      {/* Neblina direita */}
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-20 bg-gradient-to-l from-gray-100 to-transparent z-20" />
+{/* Neblina direita */}
+<div className="pointer-events-none absolute right-0 top-0 h-full w-12 sm:w-20 bg-gradient-to-l from-gray-100 to-transparent z-20" />
 
         {/* Cards */}
         <div className="relative w-full max-w-4xl mx-auto h-[450px] flex items-center justify-center overflow-visible text-center">

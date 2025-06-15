@@ -129,7 +129,7 @@ const handleGraphicClick = () => {
         <Nav />
         <Notification message=''/>
         <div className="relative">
-          <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
+          <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8 overflow-x-hidden">
         
           <motion.div
             className="max-w-2xl bg-transparent p-8 rounded-lg"
@@ -187,7 +187,7 @@ const handleGraphicClick = () => {
         
         
           {/* CardCarousel do lado direito */}
-          <motion.div className="max-w-lg sm: max-w-xl" initial={{ opacity: 0, y: -30 }}
+          <motion.div className="w-full max-w-lg sm:max-w-xl" initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}>
             <CardCarousel />
