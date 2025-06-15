@@ -8,6 +8,8 @@ import SettingsIcon from "../components/ui/SettingsIcon";
 import styled, { keyframes } from "styled-components";
 import { RefreshCcw } from "lucide-react";
 import DatabasePanel from "../components/adminDashboard/DatabasePanel";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 interface UserInfo {
@@ -29,6 +31,16 @@ export default function AdminDashboard() {
     const [email, setEmail] = useState(selectedUser?.email || "");
     const [role, setRole] = useState("user");
     const [selectedItem, setSelectedItem] = useState('Usuários');
+
+    const { isAuthenticated, admin } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+
+      if(!admin && !isAuthenticated) {
+        navigate('/home');
+      }
+    });
 
 
     const toggleModal = () => {

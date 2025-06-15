@@ -27,10 +27,10 @@ export const compareData = async (req: Request, res: Response) => {
             [startDate, endDate]
           );
 
-          console.log('Registros de data1:', data1.length);
-console.log('Registros de data2:', data2.length);
-console.log('Exemplo reading_time data1[0]:', data1[0]?.reading_time);
-console.log('Exemplo reading_time data2[0]:', data2[0]?.reading_time);
+//console.log('Registros de data1:', data1.length);
+//console.log('Registros de data2:', data2.length);
+//console.log('Exemplo reading_time data1[0]:', data1[0]?.reading_time);
+//console.log('Exemplo reading_time data2[0]:', data2[0]?.reading_time);
 
 const minLength = Math.min(data1.length, data2.length);
 

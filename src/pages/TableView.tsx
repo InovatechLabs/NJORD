@@ -11,7 +11,7 @@ import GlobalStyles from '../components/globalstyles/GlobalStyles';
 import Nav from '../components/nav/Nav';
 import { motion } from 'framer-motion';
 import { CardCarousel } from '../components/dashboard/CardCarousel';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IconChartBar } from '@tabler/icons-react';
 import { IconTable } from '@tabler/icons-react';
 import Notification from '../components/notifications/Notification';
@@ -40,15 +40,18 @@ const TableView: React.FC = () => {
       const [startDate, setStartDate] = useState<Date | null>(null);
       const [endDate, setEndDate] = useState<Date | null>(null);
       const [groupByHour, setGroupByHour] = useState(true);
-      const [formato, setFormato] = useState<'tabela' | 'grafico'>('grafico');
+      
+const location = useLocation();
 
-      const handleTableClick = () => {
-        navigate('/dashboard/table');
-      };
+const formato = location.pathname.includes('/table') ? 'tabela' : 'grafico';
 
-      const handleGraphicClick = () => {
-        navigate('/dashboard');
-      };
+const handleTableClick = () => {
+  navigate('/dashboard/table');
+};
+
+const handleGraphicClick = () => {
+  navigate('/dashboard');
+};
 
       const today = new Date();
   
@@ -162,31 +165,23 @@ const TableView: React.FC = () => {
 
             <h2 className='mt-4'>Como você deseja visualizar os dados?</h2>
       <div className='flex flex-row mt-4 gap-2'>
-        <button
-          onClick={() => {
-            setFormato('tabela');
-            handleTableClick(); 
-          }}
-          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
-            formato === 'tabela' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          <IconTable size={20} />
-          Formato tabular
-        </button>
+ <button
+                onClick={handleTableClick}
+                className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${formato === 'tabela' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+              >
+                <IconTable size={20} />
+                Formato tabular
+              </button>
 
-        <button
-          onClick={() => {
-            setFormato('grafico');
-            handleGraphicClick(); 
-          }}
-          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
-            formato === 'grafico' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          <IconChartBar size={20} />
-          Formato gráfico
-        </button>
+              <button
+                onClick={handleGraphicClick}
+                className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${formato === 'grafico' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+              >
+                <IconChartBar size={20} />
+                Formato gráfico
+              </button>
       </div>
           </motion.div>
         

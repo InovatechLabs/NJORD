@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Nav from '../components/nav/Nav';
 import DatePicker from "react-datepicker";
@@ -44,17 +45,19 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [groupByHour, setGroupByHour] = useState(true);
   const [collapsed, setCollapsed] = useState(false);
-  const [formato, setFormato] = useState<'tabela' | 'grafico'>('grafico');
 
-  const navigate = useNavigate();
+const location = useLocation();
+const navigate = useNavigate();
 
-      const handleTableClick = () => {
-        navigate('/dashboard/table');
-      };
+const formato = location.pathname.includes('/table') ? 'tabela' : 'grafico';
 
-      const handleGraphicClick = () => {
-        navigate('/dashboard');
-      };
+const handleTableClick = () => {
+  navigate('/dashboard/table');
+};
+
+const handleGraphicClick = () => {
+  navigate('/dashboard');
+};
 
   const { isAuthenticated } = useAuth();
 
@@ -105,7 +108,7 @@ export default function Dashboard() {
         return cleanedEntry;
       });
       setData(cleanedData);
-      console.log(cleanedData);
+
     } catch (err) {
       alert("Erro ao buscar dados do dashboard");
     }
@@ -180,31 +183,23 @@ export default function Dashboard() {
 
             <h2 className='mt-4'>Como você deseja visualizar os dados?</h2>
       <div className='flex flex-row mt-4 gap-2'>
-        <button
-          onClick={() => {
-            setFormato('tabela');
-            handleTableClick(); 
-          }}
-          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
-            formato === 'tabela' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          <IconTable size={20} />
-          Formato tabular
-        </button>
+              <button
+                onClick={handleTableClick}
+                className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${formato === 'tabela' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+              >
+                <IconTable size={20} />
+                Formato tabular
+              </button>
 
-        <button
-          onClick={() => {
-            setFormato('grafico');
-            handleGraphicClick(); 
-          }}
-          className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${
-            formato === 'grafico' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          <IconChartBar size={20} />
-          Formato gráfico
-        </button>
+              <button
+                onClick={handleGraphicClick}
+                className={`flex items-center gap-2 px-4 py-3 rounded transition-all duration-300 ${formato === 'grafico' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                  }`}
+              >
+                <IconChartBar size={20} />
+                Formato gráfico
+              </button>
       </div>
           </motion.div>
         

@@ -101,7 +101,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
           sameSite: 'lax',
           maxAge: 3600000, // 1 hora
         });
-        console.log(res)
+
         return res.status(200).json({ message: 'Login bem-sucedido', token });
   } catch (err) {
     console.error(err);
@@ -122,7 +122,7 @@ export const logout = async (req: Request, res: Response) => {
 
 
 export const getUserInfo = async (req: AuthenticatedRequest, res: Response) => {
-  console.log("req.user recebido no controlador:", req.user);
+
   try {
 
     if (!req.user) {
@@ -135,7 +135,7 @@ export const getUserInfo = async (req: AuthenticatedRequest, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: 'Usuário não encontrado' });
     }
-    console.log(user);
+
 
     return res.json(user);
   } catch (error) {
@@ -243,7 +243,6 @@ export const verify2FA = async (req: AuthenticatedRequest, res: Response) => {
       return res.status(400).json({ message: 'Usuário não configurou o 2FA.' });
     }
 
-    console.log(user.twoFASecret)
     const verified = speakeasy.totp.verify({
       secret: user.twoFASecret,
       encoding: 'base32',
@@ -267,8 +266,6 @@ export const verifyLoginCode = async (req: AuthenticatedRequest, res: Response) 
 
   try {
 
-    console.log("Token 2FA recebido:", token2FA);
-    console.log("Temp token recebido:", tempToken);
     const decodedTempToken = jwt.verify(tempToken, process.env.JWT_TEMP_SECRET!) as { _id: string };
 
     if (!decodedTempToken) {
@@ -277,7 +274,7 @@ export const verifyLoginCode = async (req: AuthenticatedRequest, res: Response) 
 
     const userId = decodedTempToken._id;
     const user = await User.findById(userId);
-    console.log("Usuário encontrado:", user);
+
     if (!user || !user.twoFASecret) {
       return res.status(400).json({ message: 'Usuário não configurou o 2FA.' });
     }
@@ -315,7 +312,7 @@ export const verifyBackupCode = async (req: AuthenticatedRequest, res: Response)
 
     const validCode = await User.findOne({ backupCode: backupCode }, 
     { _id: 1, role: 1 });
-    console.log("Id e role retornados do validCode:", validCode?._id, validCode?.role);
+
 
     if(!validCode) {
       return res.status(404).json({message: 'Não foi possível encontrar este código de backup'});
@@ -329,6 +326,8 @@ export const verifyBackupCode = async (req: AuthenticatedRequest, res: Response)
     });
 
     validCode.backupCode = undefined;
+    validCode.is2FAEnabled = false;
+    validCode.twoFASecret = undefined;
     await validCode.save();
 
     return res.status(200).json({ message: 'Login bem-sucedido', token, fromBackupVerify: true });

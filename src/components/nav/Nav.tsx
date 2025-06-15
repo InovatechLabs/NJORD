@@ -143,7 +143,7 @@ function NavBar({ onAboutClick }: NavProps) {
   }
 
   const handleCsvClick = () => {
-    navigate('/csv');
+    navigate('/comparison');
   }
 
   const toggleSidebar = () => {
