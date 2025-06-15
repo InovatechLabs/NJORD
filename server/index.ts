@@ -40,17 +40,6 @@ app.use("/api/compare", comparisonRouter); // Comparação de valores
 
 app.use("/api/admin", adminRouter);       // Rotas para admin
 
-// Rota de teste - listar usuários
-app.get('/listar', async (req: Request, res: Response) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-    console.error(chalk.red("Erro ao listar usuários:", error));
-    res.status(500).json({ message: "Erro ao listar usuários", error });
-  }
-});
-
 // Rota para não encontradas
 app.use((req: Request, res: Response): Response => {
   return res.status(404).json({
@@ -82,8 +71,8 @@ async function startServer() {
     console.log(chalk.green('✅ Conectado ao MongoDB com sucesso'));
 
     // Inicia servidor
-    app.listen(PORT, () => {
-      console.log(chalk.blue(`🚀 Servidor rodando em http://localhost:${PORT}`));
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(chalk.blue(`🚀 Servidor rodando na porta ${PORT}`));
     });
 
   } catch (error) {
