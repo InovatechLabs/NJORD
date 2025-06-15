@@ -18,12 +18,12 @@ export const compareData = async (req: Request, res: Response) => {
 
       try {
         const [data1] = await pool_estfrn01.query<RowDataPacket[]>(
-            'SELECT * FROM `Sensor` WHERE reading_time BETWEEN ? AND ?',
+            'SELECT * FROM hydros28_estfrn01.Sensor WHERE reading_time BETWEEN ? AND ?',
             [startDate, endDate]
           );
           
           const [data2] = await pool.query<RowDataPacket[]>(
-            'SELECT * FROM `Sensor` WHERE reading_time BETWEEN ? AND ?',
+            'SELECT * FROM hydros28_estfrn02.Sensor WHERE reading_time BETWEEN ? AND ?',
             [startDate, endDate]
           );
 

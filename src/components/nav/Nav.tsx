@@ -5,6 +5,9 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import DropdownMenu from "../dropdown/DropdownMenu";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import Notification from "../notifications/Notification";
+import NotificationDropdown from "../dropdown/NotificationDropdown";
+import { Bell } from 'lucide-react';
 
 const NavContainer = styled.nav`
   background-color: #fff;
@@ -43,7 +46,7 @@ const NavList = styled.ul<{ open: boolean }>`
   gap: 20px;
   z-index: 100;
   flex-grow: 1;
-  justify-content: center;
+  justify-content: end;
   
   @media (max-width: 1100px) {
     position: fixed;
@@ -105,6 +108,13 @@ const DropdownContainer = styled.div`
   justify-content: center;
 `;
 
+const NotificationDropdownContainer = styled.div`
+   display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 200px;
+`
+
 const Logo = styled.img`
   width: 180px;
   height: 170px;
@@ -118,6 +128,7 @@ function NavBar({ onAboutClick }: NavProps) {
 
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -138,6 +149,10 @@ function NavBar({ onAboutClick }: NavProps) {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const toggleNotification = () => {
+    setShowNotification(prev => !prev);
+  }
 
 
   return (
@@ -166,7 +181,14 @@ function NavBar({ onAboutClick }: NavProps) {
             Login
           </NavItem>
         )}
-         <NavItem onClick={onAboutClick}>
+        <NotificationDropdownContainer>
+
+          <Bell size={24} />
+          <NotificationDropdown />
+
+        </NotificationDropdownContainer>
+
+        <NavItem onClick={onAboutClick}>
           <img src="https://i.imgur.com/vQGgpwj.png" width="20" height="20" alt="Sobre" />
           Sobre
         </NavItem>

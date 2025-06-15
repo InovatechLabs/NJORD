@@ -24,6 +24,7 @@
     "cors": "^2.8.5",
     "formik": "^2.4.6",
     "framer-motion": "^12.6.2",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.503.0",
     "mongodb": "^6.16.0",
@@ -79,6 +80,7 @@
   "devDependencies": {
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
+    "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/papaparse": "^5.3.15",
     "@types/qrcode": "^1.5.5",

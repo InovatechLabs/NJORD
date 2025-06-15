@@ -22,6 +22,7 @@ import { motion } from "framer-motion";
 import { IconChartBar } from '@tabler/icons-react';
 import { IconTable } from '@tabler/icons-react';
 import { useNavigate } from "react-router-dom";
+import Notification from "../components/notifications/Notification";
 
 interface CsvData {
   Date: string;
@@ -141,6 +142,7 @@ export default function Dashboard() {
     <>
   <GlobalStyles />
   <Nav />
+  <Notification message=''/>
   <div className="relative">
           <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
         

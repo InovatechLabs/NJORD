@@ -14,6 +14,7 @@ import { CardCarousel } from '../components/dashboard/CardCarousel';
 import { useNavigate } from 'react-router-dom';
 import { IconChartBar } from '@tabler/icons-react';
 import { IconTable } from '@tabler/icons-react';
+import Notification from '../components/notifications/Notification';
 
 ModuleRegistry.registerModules([ AllCommunityModule ]);
 
@@ -123,6 +124,7 @@ const TableView: React.FC = () => {
         <>
         <GlobalStyles />
         <Nav />
+        <Notification message=''/>
         <div className="relative">
           <div className="min-h-screen w-full bg-gray-100 flex flex-col xl:flex-row items-center justify-around px-12 py-8 gap-8">
         

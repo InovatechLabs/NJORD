@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const DropdownContainer = styled.div`
+export const DropdownContainer = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-const DropdownButton = styled.button`
+export const DropdownButton = styled.button`
   background-color: transparent;
   color: black;
   border: none;
@@ -20,7 +20,7 @@ const DropdownButton = styled.button`
  
 `;
 
-const DropdownList = styled.ul<{ isOpen: boolean }>`
+export const DropdownList = styled.ul<{ isOpen: boolean }>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -31,7 +31,7 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 130px;
+  width: 230px;
   opacity: ${(props) => (props.isOpen ? 1 : 0)};
   visibility: ${(props) => (props.isOpen ? "visible" : "hidden")};
   transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
@@ -39,7 +39,7 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
   flex-direction: column;
 `;
 
-const DropdownItem = styled.li`
+export const DropdownItem = styled.li`
   padding: 10px;
   
   cursor: pointer;
