@@ -24,7 +24,7 @@ const app = express();
 
 // ===================== MIDDLEWARES =====================
 app.use(cors({
-  origin: process.env.REACT_APP_FRONTEND_URL, // Frontend
+  origin: process.env.FRONTEND_URL || 'http://localhost:3030', // Frontend
   credentials: true
 }));
 
@@ -62,7 +62,7 @@ app.use((req: Request, res: Response): Response => {
 
 async function startServer() {
   
-  const PORT = 3000;
+  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
   const MONGODB_URL = process.env.MONGODB_URL;
 
   if (!MONGODB_URL) throw new Error('A variável MONGODB_URL não está definida.');
