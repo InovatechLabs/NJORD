@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { useAuth } from "../contexts/AuthContext";
 import { motion } from "framer-motion";
 import Comparison from '../components/comparisonPage/Comparison';
+import Notification from "../components/notifications/Notification";
 
 const DatePickerWrapper = styled.div`
   display: flex;
@@ -182,6 +183,7 @@ export default function ComparisonPage() {
     <>
       <GlobalStyles />
       <Nav />
+      <Notification message='' />
       <Comparison />
 
 <div className="min-h-screen flex flex-col items-center bg-[#0D1B2A] p-8 gap-6">
