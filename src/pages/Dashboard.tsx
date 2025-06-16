@@ -24,6 +24,7 @@ import { IconChartBar } from '@tabler/icons-react';
 import { IconTable } from '@tabler/icons-react';
 import { useNavigate } from "react-router-dom";
 import Notification from "../components/notifications/Notification";
+import { toZonedTime } from 'date-fns-tz';
 
 interface CsvData {
   Date: string;
@@ -97,17 +98,18 @@ const handleGraphicClick = () => {
           cleanedEntry[trimmedKey] = value;
         });  
         const dateObj = new Date(entry.reading_time);
+        const zonedDate = toZonedTime(dateObj, 'America/Sao_Paulo');
         cleanedEntry.Date = new Intl.DateTimeFormat("pt-BR", {
           timeZone: "America/Sao_Paulo",
           dateStyle: "short",
-        }).format(dateObj);
+        }).format(zonedDate);
 
         cleanedEntry.Time = new Intl.DateTimeFormat("pt-BR", {
           timeZone: "America/Sao_Paulo",
           hour: "2-digit",
           minute: "2-digit",
           hour12: false,
-        }).format(dateObj);
+        }).format(zonedDate);
         return cleanedEntry;
       });
       setData(cleanedData);
