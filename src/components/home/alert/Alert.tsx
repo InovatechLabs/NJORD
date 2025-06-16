@@ -160,6 +160,9 @@ const cardImg = alert ? alertImages[alert.message] : "";
 
 const getValor = (campo: string, sufixo: string = '') =>
 dados && dados[campo] !== undefined ? `${dados[campo]}${sufixo}` : '-';
+
+const horarioOriginal = dados.reading_time.replace("Z", "");
+const data = new Date(horarioOriginal);
   
   return (
     <>
@@ -263,15 +266,11 @@ dados && dados[campo] !== undefined ? `${dados[campo]}${sufixo}` : '-';
                     <span>
                       Última leitura:{" "}
                       {new Intl.DateTimeFormat("pt-BR", {
-                        timeZone: "America/Sao_Paulo",
                         dateStyle: "short",
-                      }).format(new Date(dados.reading_time))}{" "}
-                      às{" "}
-                      {new Intl.DateTimeFormat("pt-BR", {
-                        timeZone: "America/Sao_Paulo",
                         hour: "2-digit",
                         minute: "2-digit",
-                      }).format(new Date(dados.reading_time))}
+                        hour12: false,
+                      }).format(data)}
                     </span>
                   )}
           </div>
