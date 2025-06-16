@@ -24,7 +24,7 @@ import { IconChartBar } from '@tabler/icons-react';
 import { IconTable } from '@tabler/icons-react';
 import { useNavigate } from "react-router-dom";
 import Notification from "../components/notifications/Notification";
-import { toZonedTime } from 'date-fns-tz';
+import { toZonedTime, format } from 'date-fns-tz';
 
 interface CsvData {
   Date: string;
@@ -85,33 +85,34 @@ const handleGraphicClick = () => {
           groupByHour
         }
       });
-      const cleanedData = res.data.map((entry: any) => {
-        const cleanedEntry: any = {};
-      
-        Object.keys(entry).forEach((key) => {
-          const trimmedKey = key.trim();
-          let value = entry[key];
-          if (!isNaN(Number(value))) {
-            value = Number(value);
-          }
-      
-          cleanedEntry[trimmedKey] = value;
-        });  
-        const dateObj = new Date(entry.reading_time);
-        const zonedDate = toZonedTime(dateObj, 'America/Sao_Paulo');
-        cleanedEntry.Date = new Intl.DateTimeFormat("pt-BR", {
-          timeZone: "America/Sao_Paulo",
-          dateStyle: "short",
-        }).format(zonedDate);
+const cleanedData = res.data.map((entry: any) => {
+  const cleanedEntry: any = {};
 
-        cleanedEntry.Time = new Intl.DateTimeFormat("pt-BR", {
-          timeZone: "America/Sao_Paulo",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }).format(zonedDate);
-        return cleanedEntry;
-      });
+  Object.keys(entry).forEach((key) => {
+    const trimmedKey = key.trim();
+    let value = entry[key];
+    if (!isNaN(Number(value))) {
+      value = Number(value);
+    }
+    cleanedEntry[trimmedKey] = value;
+  });
+
+  const readingTime = entry.reading_time; 
+
+  const year = readingTime.substring(0, 4);
+  const month = readingTime.substring(5, 7);
+  const day = readingTime.substring(8, 10);
+  const hour = readingTime.substring(11, 13);
+  const minute = readingTime.substring(14, 16);
+
+  cleanedEntry.Date = `${day}/${month}/${year}`;
+  cleanedEntry.Time = `${hour}:${minute}`;
+
+  
+  cleanedEntry.reading_time_local = readingTime;
+
+  return cleanedEntry;
+});
       setData(cleanedData);
 
     } catch (err) {
