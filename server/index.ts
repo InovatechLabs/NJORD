@@ -51,7 +51,7 @@ app.use((req: Request, res: Response): Response => {
 
 async function startServer() {
   
-  const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+  const PORT = 3000;
   const MONGODB_URL = process.env.MONGODB_URL;
 
   if (!MONGODB_URL) throw new Error('A variável MONGODB_URL não está definida.');

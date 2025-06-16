@@ -259,16 +259,21 @@ dados && dados[campo] !== undefined ? `${dados[campo]}${sufixo}` : '-';
        
      </div>
              <div className="text-white text-xl mt-4">
-            {dados?.reading_time && (
-              <span>
-                Última leitura:{" "}
-                {new Date(dados.reading_time).toLocaleDateString("pt-BR")} às{" "}
-                {new Date(dados.reading_time).toLocaleTimeString("pt-BR", {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </span>
-            )}
+                  {dados?.reading_time && (
+                    <span>
+                      Última leitura:{" "}
+                      {new Intl.DateTimeFormat("pt-BR", {
+                        timeZone: "America/Sao_Paulo",
+                        dateStyle: "short",
+                      }).format(new Date(dados.reading_time))}{" "}
+                      às{" "}
+                      {new Intl.DateTimeFormat("pt-BR", {
+                        timeZone: "America/Sao_Paulo",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      }).format(new Date(dados.reading_time))}
+                    </span>
+                  )}
           </div>
         </Card>
         </div>
