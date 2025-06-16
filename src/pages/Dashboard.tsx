@@ -97,14 +97,17 @@ const handleGraphicClick = () => {
           cleanedEntry[trimmedKey] = value;
         });  
         const dateObj = new Date(entry.reading_time);
-      
-        cleanedEntry.Date = dateObj.toLocaleDateString('pt-BR'); 
-        cleanedEntry.Time = dateObj.toLocaleTimeString('pt-BR', {
-          hour: '2-digit',
-          minute: '2-digit',
+        cleanedEntry.Date = new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          dateStyle: "short",
+        }).format(dateObj);
+
+        cleanedEntry.Time = new Intl.DateTimeFormat("pt-BR", {
+          timeZone: "America/Sao_Paulo",
+          hour: "2-digit",
+          minute: "2-digit",
           hour12: false,
-          timeZone: 'America/Sao_Paulo'
-        });
+        }).format(dateObj);
         return cleanedEntry;
       });
       setData(cleanedData);
