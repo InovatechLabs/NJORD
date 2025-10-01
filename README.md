@@ -34,7 +34,7 @@ Os entregáveis serão realizados conforme as datas previamente acordadas com o 
 | ------- | --------------------- | --------------------------------- | --------------------------------------------------------- |
 | :one:   | :calendar: 15/04/2025 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb1.md)           | 
 | :two:   | :calendar: 13/05/2025 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb2.md)           |
-| :three: | :calendar: 11/06/2025 | :yellow_square: Em andamento          | :round_pushpin: |
+| :three: | :calendar: 11/06/2025 | :green_square: Concluído          | :round_pushpin: [Ver Relatório](./docs/spb2.md)  
 
 # :triangular_flag_on_post: Backlog do Produto
 
